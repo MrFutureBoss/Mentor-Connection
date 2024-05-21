@@ -1,0 +1,70 @@
+GET http://localhost:9999/user/students?skip=20
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzQiLCJpYXQiOjE3MDk5OTQ0ODYsImV4cCI6MTcxMDAzNzY4Nn0.wErNIQ6TVK7xwvhvrSdYE-PjFXi1PbRliFPit-dOT2M
+
+### 
+GET http://localhost:9999/user/mentors?skip=0
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzQiLCJpYXQiOjE3MDk5OTQ0ODYsImV4cCI6MTcxMDAzNzY4Nn0.wErNIQ6TVK7xwvhvrSdYE-PjFXi1PbRliFPit-dOT2M
+
+###
+GET http://localhost:9999/user/teachers
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzMiLCJpYXQiOjE3MDk2MjIxODYsImV4cCI6MTcwOTY2NTM4Nn0.cbyum603HXE9yXgFHv4pB3bJmFlxqgULC82UeCO11Pw
+
+###
+GET http://localhost:9999/category
+
+###
+POST  http://localhost:9999/semester_detail/65dfe8d62499d66d73df02b5/semester
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmUiLCJpYXQiOjE3MTIyMTcwNTMsImV4cCI6MTcxMjI2MDI1M30.lEsH81RI0lUfQrzM1_2gBChJStNdCiMVtYW4nn59GGg
+
+###
+http://localhost:9999/user/parameter 
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzQiLCJpYXQiOjE3MDk5MjUxNDUsImV4cCI6MTcwOTk2ODM0NX0.KxvO1aF1ohiQd0rAu0hR1hVMhbRNXhhnpqaIQgvtB58
+
+
+### 
+http://localhost:9999/teacher/65ede0edb11fb5bd145a39fd/suggest
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTEyN2IxMWZiNWJkMTQ1YTNhZjIiLCJpYXQiOjE3MTI2NTMwNDksImV4cCI6MTcxMjY5NjI0OX0.GNle_FRkgjOnG8mUqVvMGsk-QkzqORLCXoxyWAgqvuw
+
+### 
+http://localhost:9999/teacher/65ede127b11fb5bd145a3af1/groups
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTEyN2IxMWZiNWJkMTQ1YTNhZjIiLCJpYXQiOjE3MTI2NTMwNDksImV4cCI6MTcxMjY5NjI0OX0.GNle_FRkgjOnG8mUqVvMGsk-QkzqORLCXoxyWAgqvuw
+
+### 
+http://localhost:9999/group/65ede127b11fb5bd145a3af1/teacher
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTEyN2IxMWZiNWJkMTQ1YTNhZjIiLCJpYXQiOjE3MTI2NTMwNDksImV4cCI6MTcxMjY5NjI0OX0.GNle_FRkgjOnG8mUqVvMGsk-QkzqORLCXoxyWAgqvuw
+### 
+POST http://localhost:9999/temporary_matching/65ede780b11fb5bd145a3c76/group
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmQiLCJpYXQiOjE3MTAxNTcxNTcsImV4cCI6MTcxMDIwMDM1N30.QmJGCdOwAf1C2zpugjd4dsJsSmUX3JkJIA3KBD6IR-I
+ 
+### 
+GET http://localhost:9999/class/65ede0edb11fb5bd145a39f0
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZjAiLCJpYXQiOjE3MTIwNDQwMDksImV4cCI6MTcxMjA4NzIwOX0.ZC-lxRRs75WXNRlBKvprTnzPrdGPzFcdFW7hXKks_N4
+ 
+###
+GET http://localhost:9999/semester/upcoming
+ 
+###
+GET http://localhost:9999/class/65ede127b11fb5bd145a3af2
+ 
+ 
+###
+DELETE http://localhost:9999/class/6612e620772dcd4e98f73d34
+  
+###
+POST http://localhost:9999/admins/create-new-classes
+
+{ "className": "a", "limitStudent": 30 }
+
+###
+http://localhost:9999/user/without_semester?skip=0&role=4
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmUiLCJpYXQiOjE3MTIyMTcwNTMsImV4cCI6MTcxMjI2MDI1M30.lEsH81RI0lUfQrzM1_2gBChJStNdCiMVtYW4nn59GGg
+
+###
+http://localhost:9999/semester_detail/65dfe8d62499d66d73df02b5/semester/3/users?skip=0
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmUiLCJpYXQiOjE3MTIyMTcwNTMsImV4cCI6MTcxMjI2MDI1M30.lEsH81RI0lUfQrzM1_2gBChJStNdCiMVtYW4nn59GGg
+
+###
+GET http://localhost:9999/class?item=createdAt&order=-1&skip=0
+
+###
+GET http://localhost:9999/user/65dfe8d62499d66d73df02b5/semester?role=2 
