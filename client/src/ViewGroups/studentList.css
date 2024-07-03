@@ -1,0 +1,83 @@
+/* Add this to your StudentsList.css */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+
+.styled-table th {
+  padding: 12px 13px;
+}
+.styled-table td {
+  padding: 10px 15px;
+}
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+/* CSS for Navbar animation */
+.navbar-enter {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+.navbar-enter-active {
+  opacity: 1;
+  transform: translateY(0%);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.navbar-exit {
+  opacity: 1;
+  transform: translateY(0%);
+}
+
+.navbar-exit-active {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Css for claslist */
+.ClassListWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.ClassItem {
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 3px;
+}
+@keyframes gradientBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.gradient-animated {
+  background: linear-gradient(-45deg, #005241, #128066, #00524f, #008d87);
+  background-size: 400% 400%;
+  animation: gradientBg 15s ease infinite;
+}

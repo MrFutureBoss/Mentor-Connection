@@ -1,0 +1,305 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  letter-spacing: 0.2px;
+  font-family: SegoeuiPc, Segoe UI, San Francisco, Helvetica Neue, Helvetica, Lucida Grande, Roboto,
+    Ubuntu, Tahoma, Microsoft Sans Serif, Arial, sans-serif;
+}
+.ithv_elm_bl:hover {
+  opacity: 0.9; /* Giảm độ mờ tùy thuộc vào yêu cầu của bạn */
+  transition: opacity 0.1s ease-in-out; /* Thêm transition để có hiệu ứng mềm mại */
+  background-color: #5f5f5f !important;
+  color: #f8f8f8;
+  border-radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none;
+}
+.cnc_modle-form-label,
+.block {
+  display: block;
+}
+
+.none {
+  display: none;
+}
+
+.error-message-response,
+.flx,
+.mi_rg-info-prj,
+.mi_info_filter-heading,
+.ftfa_header,
+.mi_contact-share,
+.lct-create_new_class,
+.mi_contact-phone,
+.mtv-info_group,
+.cnc_modal-footer,
+.mi_contact,
+.ftfa_body-item,
+.mtv-info_linmit-rg,
+.mtv-info_rgd,
+.register_contain,
+.mi_rg-info-prj-link,
+.mi_rg-info-prj-mentor,
+.login_contain,
+.mi_rg-info-prj-type,
+.register_contain_modal,
+.mtv_group,
+.login_contain_modal,
+.fifa_body-group,
+.login_contain_modal,
+.mi_rg-group {
+  display: flex;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.login_contain,
+.register_contain,
+.mi_contact-share,
+.lct-create_new_class,
+.mi_contact-phone,
+.flx-ct-c {
+  justify-content: center;
+}
+
+.ftfa_header,
+.mtv-info_group,
+.flx-ct-b {
+  justify-content: space-between;
+}
+
+.flx-ct-a {
+  justify-content: space-around;
+}
+
+.flx-ct-e,
+.cnc_modal-footer {
+  justify-content: end;
+}
+
+.login_contain,
+.ftfa_body-item,
+.register_contain {
+  align-items: center;
+}
+
+.haft {
+  width: 50%;
+}
+
+.mi_rg-info-prj,
+.mtv_group,
+.mtv-info_group,
+.mtv-info_linmit-rg,
+.mtv-info_rgd,
+.error-message-response,
+.mi_contact,
+.mi_rg-info-prj-type,
+.mi_rg-info-prj-link,
+.mi_rg-info-prj-mentor,
+.cnc_modal-footer,
+.flx-row {
+  flex-direction: row;
+}
+
+.mi_rg-group,
+.fifa_body-group,
+.flx-column {
+  flex-direction: column;
+}
+
+.login_contain_modal,
+.register_contain_modal {
+  box-sizing: border-box;
+}
+
+.lg_title,
+.rg_title {
+  text-align: center;
+}
+
+.required {
+  color: #d70707;
+}
+
+.fg_fw_notif,
+.fg_back-btn,
+.fg_gt_rg-btn,
+.conditions-title > span,
+.conditions-title > span > a,
+.forgot-password-title > a,
+.rg_label,
+.rg_seting-role,
+.rg_label > a,
+.lg_label,
+.lg_seting-role,
+.lg_label > a {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #757575;
+}
+
+.lg_error_message,
+.rg_error_message {
+  font-size: 0.625rem;
+  color: #d70707;
+}
+
+.error {
+  border: 1.25px solid #d70707;
+}
+#dfa-navbar::-webkit-scrollbar-track,
+.fifa_body-group::-webkit-scrollbar-track {
+  background: #ccc;
+}
+.edit-profile::-webkit-scrollbar,
+.register_area::-webkit-scrollbar {
+  width: 0;
+}
+#add_list_in_semester::-webkit-scrollbar,
+#list-temparary-matching::-webkit-scrollbar {
+  width: 8px;
+}
+#dfa-navbar::-webkit-scrollbar,
+#card-table-user::-webkit-scrollbar,
+.rg_form-register::-webkit-scrollbar,
+.cnc_modle-form::-webkit-scrollbar,
+.lct_board-list::-webkit-scrollbar,
+.fifa_body-group::-webkit-scrollbar {
+  width: 4px;
+}
+
+#add_list_in_semester::-webkit-scrollbar-thumb,
+#dfa-navbar::-webkit-scrollbar-thumb,
+#list-temparary-matching::-webkit-scrollbar-thumb,
+#card-table-user::-webkit-scrollbar-thumb,
+.rg_form-register::-webkit-scrollbar-thumb,
+.cnc_modle-form::-webkit-scrollbar-thumb,
+.lct_board-list::-webkit-scrollbar-thumb,
+.fifa_body-group::-webkit-scrollbar-thumb {
+  background-color: rgb(216, 213, 213);
+  border-radius: 6px;
+}
+
+#add_list_in_semester::-webkit-scrollbar-track,
+#list-temparary-matching::-webkit-scrollbar-track,
+#card-table-user::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.rg_form-register::-webkit-scrollbar-track,
+#dfa-navbar::-webkit-scrollbar-track,
+.cnc_modle-form::-webkit-scrollbar-track,
+.lct_board-list::-webkit-scrollbar-track,
+.fifa_body-group::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+#add_list_in_semester::-webkit-scrollbar-corner,
+#list-temparary-matching::-webkit-scrollbar-corner,
+#card-table-user::-webkit-scrollbar-corner,
+.rg_form-register::-webkit-scrollbar-corner,
+.cnc_modle-form::-webkit-scrollbar-corner,
+.lct_board-list::-webkit-scrollbar-corner,
+.fifa_body-group::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+.forgot-password-title,
+.conditions-title {
+  margin-bottom: 0.225rem;
+}
+
+.p-0 {
+  padding: 0;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.active_info {
+  background-color: #ededed;
+  border-radius: 6px;
+}
+
+.gap-3 {
+  gap: 1rem;
+}
+
+.gap-4 {
+  gap: 1.5rem;
+}
+
+.gap-5 {
+  gap: 3rem;
+}
+
+.gap-2,
+.ftfa_body-item {
+  gap: 0.5rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.truncate {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-wrap: break-word !important;
+}
+
+.flx-1 {
+  flex: 1;
+}
+
+.error-message-response {
+  background-color: #f6c9c9;
+  color: #d70707;
+  margin-top: 6px;
+  padding: 10px 22px;
+  font-size: 0.825rem;
+}
+
+.disabled {
+  background: none !important;
+  color: #dfdfdf !important;
+  cursor: default !important;
+}
+
+@keyframes top_to_center {
+  0% {
+    transform: translateY(-180%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.pop-up {
+  animation: top_to_center 1.2s ease-in-out;
+}
+.select-item,
+#select-semster-add,
+#select-gender,
+#select-category,
+#select-category-action,
+#select-semester-action {
+  padding: 0.75rem 0.75rem !important;
+}
