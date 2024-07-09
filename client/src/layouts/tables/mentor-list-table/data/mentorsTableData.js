@@ -98,7 +98,7 @@ export default function data() {
       { Header: "giới tính", accessor: "gender", width: "15%", align: "center" },
       { Header: "Lĩnh vực", accessor: "categories", width: "auto", align: "left" },
       { Header: "giới hạn", accessor: "count", width: "auto", align: "center" },
-      { Header: "kinh nghiẹm", accessor: "degree", width: "auto", align: "left" },
+      { Header: "kinh nghiệm", accessor: "degree", width: "auto", align: "left" },
     ],
     rows: rows,
   };

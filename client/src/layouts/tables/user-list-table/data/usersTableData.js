@@ -73,7 +73,13 @@ export default function data() {
         user: <User _id={user._id} image={userImg} name={user.username} email={user.email} />,
         role: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
-            {user.role === 1 ? "học sinh" : user.role === 2 ? "giáo viên" : "người hướng dẫn"}
+            {user.role === 4
+              ? "Học sinh"
+              : user.role === 2
+              ? "Giáo viên"
+              : user.role === 3
+              ? "Người hướng dẫn"
+              : "Quản trị viên"}
           </MKTypography>
         ),
         gender: (

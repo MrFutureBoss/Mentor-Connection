@@ -322,7 +322,7 @@ const ViewGroups = ({ teacherId }) => {
                   my="2px"
                   onClick={() => handleClickViewTemporaryMatching(g.group, g.matching[0]?._id)}
                 >
-                  <em>Xem</em>
+                   <em>Danh sách Mentor</em>
                 </Typography>
               </>
             )}
