@@ -127,7 +127,15 @@ const changePassword = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const updateLeaderByTeacher = async (req, res) => {
+  const { _id, isLeader } = req.body;
+  try {
+    const updatedUser = await userDAO.updateUserLeaderStatus(_id, isLeader);
+    res.json({ message: 'User updated successfully', user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 export default {
   addNewUser,
   getUserLogin,
@@ -138,4 +146,5 @@ export default {
   getUserBySmtId,
   changePassword,
   getUserProfileById,
+  updateLeaderByTeacher,
 };

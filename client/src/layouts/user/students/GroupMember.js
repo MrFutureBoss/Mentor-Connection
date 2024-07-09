@@ -8,7 +8,11 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import getParams from "utilities/getParams";
 import MKTypography from "components/MKTypography";
 import MKBox from "components/MKBox";
-
+import SettingsIcon from "@mui/icons-material/Settings";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "utilities/initialValue";
 const GroupMembers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,6 +20,55 @@ const GroupMembers = () => {
   const groupId = getParams(2, url.pathname);
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
+  const [members, setMembers] = useState([]);
+  useEffect(() => {
+    if (groupDetails?.members) {
+      setMembers(groupDetails.members);
+    }
+  }, [groupDetails]);
+  const handleLeaderChange = (userId, userName) => {
+    Swal.fire({
+      title: "Bạn muốn đổi " + userName + " thành trưởng nhóm không?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Đồng ý",
+      cancelButtonText: "Hủy",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const jwt = localStorage.getItem("jwt");
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+        axios
+          .patch(
+            `${BASE_URL}/user/update_leader`,
+            {
+              _id: userId,
+              isLeader: true,
+            },
+            config
+          )
+          .then((response) => {
+            console.log("Response:", response.data);
+            const updatedMembers = members.map((member) =>
+              member._id === userId ? { ...member, isLeader: true } : member
+            );
+            setMembers(updatedMembers);
+            Swal.fire("Đã cập nhật thành công!", "", "success");
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error("Lỗi khi cập nhật trưởng nhóm:", error);
+            Swal.fire("Có lỗi xảy ra!", "Vui lòng thử lại sau.", "error");
+          });
+      }
+    });
+  };
   const handleUserDetailClick = (userId) => {
     navigate(`/user/${userId}/profile`);
   };
@@ -76,20 +129,32 @@ const GroupMembers = () => {
                 </MKTypography>
               </MKBox>
             )}
-            {userLogin?.isLeader && userLogin?.groupId[0]?._id === groupId && (
-              <MKButton
-                onClick={() => dispatch(setActivePopup(true))}
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  margin: "8px",
-                  backgroundColor: "#00000001",
-                }}
-              >
-                Cập nhật dự án
-              </MKButton>
+            {groupDetails?.project?.status && (
+              <MKBox display="flex" gap="0.5rem">
+                <MKTypography fontSize=".825rem" color="text" fontWeight="medium">
+                  Tình trạng dự án:
+                </MKTypography>
+                <MKTypography fontSize=".825rem" color="text">
+                  {groupDetails?.project?.status}
+                </MKTypography>
+              </MKBox>
             )}
+            {userLogin?.isLeader &&
+              userLogin?.groupId[0]?._id === groupId &&
+              groupDetails?.project?.status !== "Planning" && (
+                <MKButton
+                  onClick={() => dispatch(setActivePopup(true))}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    margin: "8px",
+                    backgroundColor: "#00000001",
+                  }}
+                >
+                  Cập nhật dự án
+                </MKButton>
+              )}
           </Box>
         )}
         <Box
@@ -129,7 +194,6 @@ const GroupMembers = () => {
           >
             {groupDetails?.members?.map((member) => (
               <ListItem
-                onClick={() => handleUserDetailClick(member?._id)}
                 key={member.username}
                 sx={{
                   "&:not(:last-child)": {
@@ -146,6 +210,7 @@ const GroupMembers = () => {
                 }}
               >
                 <Avatar
+                  onClick={() => handleUserDetailClick(member?._id)}
                   alt={member.username}
                   src={member.avatar}
                   sx={{
@@ -173,13 +238,22 @@ const GroupMembers = () => {
                 />
                 <MKTypography sx={{ fontFamily: "inherit", fontWeight: "medium" }}>
                   {member.isLeader && <StarBorderIcon color="warning" sx={{ ml: "auto" }} />}
+                  {!member.isLeader && (
+                    <SettingsIcon
+                      color="disabled"
+                      className="custom-star-icon"
+                      onClick={() => handleLeaderChange(member._id, member.username)}
+                      sx={{
+                        ml: "auto",
+                      }}
+                    />
+                  )}
                 </MKTypography>
               </ListItem>
             ))}
           </List>
         </Box>
       </Box>
-
       <Box marginTop={1} sx={{ width: "30%" }}>
         {groupDetails?.mentor?.length > 0 && (
           <Box
