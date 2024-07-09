@@ -11,8 +11,8 @@ import MKBox from "components/MKBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { BASE_URL } from "utilities/initialValue";
+import { updateGroupLeader } from "app/slices/groupSlice";
 const GroupMembers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,12 +20,7 @@ const GroupMembers = () => {
   const groupId = getParams(2, url.pathname);
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
-  const [members, setMembers] = useState([]);
-  useEffect(() => {
-    if (groupDetails?.members) {
-      setMembers(groupDetails.members);
-    }
-  }, [groupDetails]);
+
   const handleLeaderChange = (userId, userName) => {
     Swal.fire({
       title: "Bạn muốn đổi " + userName + " thành trưởng nhóm không?",
@@ -55,12 +50,8 @@ const GroupMembers = () => {
           )
           .then((response) => {
             console.log("Response:", response.data);
-            const updatedMembers = members.map((member) =>
-              member._id === userId ? { ...member, isLeader: true } : member
-            );
-            setMembers(updatedMembers);
+            dispatch(updateGroupLeader({ groupId, userId }));
             Swal.fire("Đã cập nhật thành công!", "", "success");
-            window.location.reload();
           })
           .catch((error) => {
             console.error("Lỗi khi cập nhật trưởng nhóm:", error);
