@@ -16,9 +16,16 @@ matchedRouter.get(
   matchedController.getMatchedGroups
 );
 matchedRouter.delete(
-  "/:matchedId",
+  "/:groupId",
   verifyAccessToken,
   matchedController.deleteMatchedGroup
 );
+matchedRouter.patch(
+  "/:groupId",
+  verifyAccessToken,
+  matchedController.updateMatchedGroup
+);
+
+
 
 export default matchedRouter;

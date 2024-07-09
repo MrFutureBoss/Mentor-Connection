@@ -2,10 +2,10 @@ import Group from "../../models/groupModel.js";
 import Matched from "../../models/matchedModel.js";
 import TemporaryMatching from "../../models/temporaryMatching.js";
 
-const addMatched = async (groupId, mentorId) => {
+const addMatched = async (groupId, mentorId, status) => {
   try {
     await TemporaryMatching.deleteOne({ groupId: groupId });
-    return await Matched.create({ groupId: groupId, mentorId: mentorId });
+    return await Matched.create({ groupId: groupId, mentorId: mentorId, status: status });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -127,17 +127,28 @@ const getMatchedGroupsWithDetails = async () => {
   ]);
 };
 
-const deleteMatchedById = async (matchedId) => {
+const deleteMatchedByGroupId = async (groupId) => {
   try {
-    const result = await Matched.findByIdAndDelete(matchedId);
+    const result = await Matched.deleteMany({ groupId: groupId });
     return result;
   } catch (error) {
     throw error;
   }
 };
+
+const updateMatchedByGroupId = async (groupId, updateData) => {
+  try {
+    const result = await Matched.updateMany({ groupId: groupId }, updateData, { new: true });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   addMatched,
   addAllMatching,
-  deleteMatchedById,
+  deleteMatchedByGroupId,
   getMatchedGroupsWithDetails,
+  updateMatchedByGroupId,
 };
