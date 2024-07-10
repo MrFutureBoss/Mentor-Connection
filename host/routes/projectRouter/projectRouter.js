@@ -10,4 +10,20 @@ projectRouter.patch(
   verifyAccessToken,
   projectController.updateProject
 );
+projectRouter.get(
+  "/planning-projects/:teacherId",
+  verifyAccessToken,
+  projectController.getPlanningProjectsForTeacher
+);
+projectRouter.put(
+  "/approve/:projectId",
+  verifyAccessToken,
+  projectController.approveProject
+);
+projectRouter.put(
+  "/decline/:projectId",
+  verifyAccessToken,
+  projectController.declineProject
+);
+
 export default projectRouter;

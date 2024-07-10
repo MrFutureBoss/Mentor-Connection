@@ -22,8 +22,58 @@ const getProjectById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getPlanningProjectsForTeacher = async (req, res) => {
+  const teacherId = req.params.teacherId;
+
+  try {
+    const results = await projectDAO.getPlanningProjectsForTeacher(teacherId);
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const approveProject = async (req, res) => {
+  const { projectId } = req.params;
+  try {
+    const updatedProject = await projectDAO.updateProjectStatus(
+      projectId,
+      "InProgress"
+    );
+    if (!updatedProject) {
+      return res.status(404).json({
+        error: "Không tìm thấy dự án có trạng thái Planning",
+      });
+    }
+    res.json(updatedProject);
+  } catch (error) {
+    console.error("Error in approveProject:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const declineProject = async (req, res) => {
+  const { projectId } = req.params;
+  try {
+    const updatedProject = await projectDAO.updateProjectStatus(
+      projectId,
+      "Decline"
+    );
+    if (!updatedProject) {
+      return res.status(404).json({
+        error: "Không tìm thấy dự án có trạng thái Planning",
+      });
+    }
+    res.json(updatedProject);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 export default {
   updateProject,
   getProjectById,
+  getPlanningProjectsForTeacher,
+  approveProject,
+  declineProject,
 };
