@@ -8,7 +8,7 @@ const projectSchema = new Schema(
       type: String,
       status: {
         type: String,
-        enum: ["Planning", "InProgress", "Decline "],
+        enum: ["Planning", "InProgress", "Decline", "Changing"],
         default: "Planning",
       },
     },

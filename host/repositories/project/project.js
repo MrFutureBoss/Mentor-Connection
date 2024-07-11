@@ -89,7 +89,69 @@ const getPlanningProjectsForTeacher = async (teacherId) => {
   ]);
 };
 
-const updateProjectStatus = async (projectId, newStatus) => {
+const getChangingProjectsForTeacher = async (teacherId) => {
+  return await Group.aggregate([
+    {
+      $lookup: {
+        from: "classes",
+        localField: "classId",
+        foreignField: "_id",
+        as: "classInfo",
+      },
+    },
+    {
+      $unwind: "$classInfo",
+    },
+    {
+      $match: {
+        "classInfo.teacherId": new mongoose.Types.ObjectId(teacherId),
+      },
+    },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "projectId",
+        foreignField: "_id",
+        as: "projectInfo",
+      },
+    },
+    {
+      $unwind: "$projectInfo",
+    },
+    {
+      $match: {
+        "projectInfo.status": "Changing",
+      },
+    },
+    {
+      $lookup: {
+        from: "projectcategories",
+        localField: "projectInfo._id",
+        foreignField: "projectId",
+        as: "projectCategories",
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "projectCategories.categoryId",
+        foreignField: "_id",
+        as: "categoryInfo",
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        groupId: "$_id",
+        groupName: "$name",
+        projectId: "$projectInfo._id",
+        projectName: "$projectInfo.name",
+        categories: "$categoryInfo.name",
+      },
+    },
+  ]);
+};
+const updateProjectStatusPlanning = async (projectId, newStatus) => {
   try {
     const updatedProject = await Project.findOneAndUpdate(
       {
@@ -106,10 +168,28 @@ const updateProjectStatus = async (projectId, newStatus) => {
   }
 };
 
+const updateProjectStatusChanging = async (projectId, newStatus) => {
+  try {
+    const updatedProject = await Project.findOneAndUpdate(
+      {
+        _id: new mongoose.Types.ObjectId(projectId),
+        status: "Changing",
+      },
+      { $set: { status: newStatus } },
+      { new: true }
+    );
+    return updatedProject;
+  } catch (error) {
+    console.error("Error in updateProjectStatus:", error);
+    throw new Error("Error updating project status");
+  }
+};
 export default {
   createProject,
   getProjectById,
   updateProject,
   getPlanningProjectsForTeacher,
-  updateProjectStatus,
+  updateProjectStatusPlanning,
+  getChangingProjectsForTeacher,
+  updateProjectStatusChanging,
 };
