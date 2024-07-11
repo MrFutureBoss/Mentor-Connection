@@ -72,7 +72,7 @@ const GroupDetail = () => {
     <>
       <DefaultNavbar routes={Routes} />
       {groupDetails?.project?.status !== "Planning" && active_popup && <UpdateProject />}
-      {["Planning", "InProgress", "Decline", "Changing"].includes(groupDetails?.project?.status) &&
+      {["Planning", "InProgress", "Changing"].includes(groupDetails?.project?.status) &&
         active_popup && <ReviseProject />}
 
       <MKBox bgColor="#00000008">

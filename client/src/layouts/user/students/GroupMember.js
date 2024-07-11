@@ -127,15 +127,36 @@ const GroupMembers = () => {
                   Tình trạng dự án:
                 </MKTypography>
                 <MKTypography fontSize=".825rem" color="text">
-                  {groupDetails?.project?.status}
+                  <span
+                    style={{
+                      color:
+                        groupDetails?.project?.status == "Decline"
+                          ? "red"
+                          : groupDetails?.project?.status == "InProgress"
+                          ? "#00FF00"
+                          : groupDetails?.project?.status == "Changing"
+                          ? "#0066CC"
+                          : groupDetails?.project?.status == "Planning"
+                          ? "#009900"
+                          : "",
+                    }}
+                  >
+                    {groupDetails?.project?.status == "Changing"
+                      ? "Đang thay đổi"
+                      : groupDetails?.project?.status == "Decline"
+                      ? "Bị từ chối"
+                      : groupDetails?.project?.status == "Planning"
+                      ? "Đang chờ duyệt"
+                      : groupDetails?.project?.status == "InProgress"
+                      ? "Đang hoạt động"
+                      : ""}
+                  </span>
                 </MKTypography>
               </MKBox>
             )}
             {userLogin?.isLeader &&
               userLogin?.groupId[0]?._id === groupId &&
-              !["Planning", "InProgress", "Rejected", "Changing"].includes(
-                groupDetails?.project?.status
-              ) && (
+              !["Planning", "InProgress", "Changing"].includes(groupDetails?.project?.status) && (
                 <MKButton
                   onClick={() => dispatch(setActivePopup(true))}
                   sx={{
@@ -151,9 +172,7 @@ const GroupMembers = () => {
               )}
             {userLogin?.isLeader &&
               userLogin?.groupId[0]?._id === groupId &&
-              ["Planning", "InProgress", "Decline", "Changing"].includes(
-                groupDetails?.project?.status
-              ) && (
+              ["Planning", "InProgress", "Changing"].includes(groupDetails?.project?.status) && (
                 <MKButton
                   onClick={() => dispatch(setActivePopup(true))}
                   sx={{
