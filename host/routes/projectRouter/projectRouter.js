@@ -15,15 +15,29 @@ projectRouter.get(
   verifyAccessToken,
   projectController.getPlanningProjectsForTeacher
 );
-projectRouter.put(
-  "/approve/:projectId",
+projectRouter.get(
+  "/changing-projects/:teacherId",
   verifyAccessToken,
-  projectController.approveProject
+  projectController.getChangingProjectsForTeacher
 );
 projectRouter.put(
-  "/decline/:projectId",
+  "/approve/planning/:projectId",
   verifyAccessToken,
-  projectController.declineProject
+  projectController.approveProjectPlanning
 );
-
+projectRouter.put(
+  "/decline/planning/:projectId",
+  verifyAccessToken,
+  projectController.declineProjectPlanning
+);
+projectRouter.put(
+  "/approve/changing/:projectId",
+  verifyAccessToken,
+  projectController.approveProjectChanging
+);
+projectRouter.put(
+  "/decline/changing/:projectId",
+  verifyAccessToken,
+  projectController.declineProjectChanging
+);
 export default projectRouter;

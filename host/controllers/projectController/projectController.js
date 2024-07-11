@@ -32,11 +32,21 @@ const getPlanningProjectsForTeacher = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const getChangingProjectsForTeacher = async (req, res) => {
+  const teacherId = req.params.teacherId;
 
-const approveProject = async (req, res) => {
+  try {
+    const results = await projectDAO.getChangingProjectsForTeacher(teacherId);
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const approveProjectPlanning = async (req, res) => {
   const { projectId } = req.params;
   try {
-    const updatedProject = await projectDAO.updateProjectStatus(
+    const updatedProject = await projectDAO.updateProjectStatusPlanning(
       projectId,
       "InProgress"
     );
@@ -52,10 +62,10 @@ const approveProject = async (req, res) => {
   }
 };
 
-const declineProject = async (req, res) => {
+const declineProjectPlanning = async (req, res) => {
   const { projectId } = req.params;
   try {
-    const updatedProject = await projectDAO.updateProjectStatus(
+    const updatedProject = await projectDAO.updateProjectStatusPlanning(
       projectId,
       "Decline"
     );
@@ -70,10 +80,49 @@ const declineProject = async (req, res) => {
   }
 };
 
+const approveProjectChanging = async (req, res) => {
+  const { projectId } = req.params;
+  try {
+    const updatedProject = await projectDAO.updateProjectStatusChanging(
+      projectId,
+      "InProgress"
+    );
+    if (!updatedProject) {
+      return res.status(404).json({
+        error: "Không tìm thấy dự án có trạng thái Planning",
+      });
+    }
+    res.json(updatedProject);
+  } catch (error) {
+    console.error("Error in approveProject:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const declineProjectChanging = async (req, res) => {
+  const { projectId } = req.params;
+  try {
+    const updatedProject = await projectDAO.updateProjectStatusChanging(
+      projectId,
+      "Decline"
+    );
+    if (!updatedProject) {
+      return res.status(404).json({
+        error: "Không tìm thấy dự án có trạng thái Planning",
+      });
+    }
+    res.json(updatedProject);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 export default {
   updateProject,
   getProjectById,
   getPlanningProjectsForTeacher,
-  approveProject,
-  declineProject,
+  getChangingProjectsForTeacher,
+  approveProjectPlanning,
+  declineProjectPlanning,
+  approveProjectChanging,
+  declineProjectChanging,
 };
