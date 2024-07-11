@@ -66,6 +66,7 @@ const getMentorGroups = async (mentorId) => {
               rollNumber: "$groupMembers.rollNumber",
             },
           },
+          status: { $first: "$status" },
         },
       },
       {
@@ -75,6 +76,7 @@ const getMentorGroups = async (mentorId) => {
           projectCategories: 1,
           members: 1,
           memberCount: { $size: "$members" },
+          status: 1,
         },
       },
     ]);

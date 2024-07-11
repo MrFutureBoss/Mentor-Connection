@@ -15,6 +15,7 @@ import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setMentorGroups } from "app/slices/mentorSlice";
 import logoAvatar from "../../../assets/images/logos/gray-logos/logo.webp";
+import { toast } from "react-toastify";
 
 function MentorGroups() {
   const groups = useSelector((state) => state.mentor.mentorGroups);
@@ -28,6 +29,19 @@ function MentorGroups() {
       Authorization: `Bearer ${jwt}`,
     },
   };
+  console.log(jwt);
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/mentor/mentor_groups`, config)
+      .then((response) => {
+        dispatch(setMentorGroups(response.data));
+        if (response.data && response.data.length > 0) {
+          setSelectedGroup(response.data[0]);
+        }
+      })
+      .catch((err) => console.log("Error fetching mentor groups:", err));
+  }, [dispatch]);
 
   useEffect(() => {
     axios
@@ -44,6 +58,44 @@ function MentorGroups() {
   const handleClick = (group) => {
     setSelectedGroup(group);
   };
+
+  const handleApprove = (groupId, groupName) => {
+    axios
+      .patch(`${BASE_URL}/matched/${groupId}`, { status: "Approve" }, config)
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success(`Bạn đã Đồng ý với dự án ${groupName}`);
+          const updatedGroups = groups.map((group) =>
+            group._id === groupId ? { ...group, status: "Approve" } : group
+          );
+          dispatch(setMentorGroups(updatedGroups));
+          if (selectedGroup._id === groupId) {
+            setSelectedGroup({ ...selectedGroup, status: "Approve" });
+          }
+        }
+      })
+      .catch((err) => console.log("Error approving group:", err));
+  };
+
+  const handleDelete = (groupId, groupName) => {
+    console.log(groupId);
+    axios
+      .delete(`${BASE_URL}/matched/${groupId}`, config)
+      .then((response) => {
+        if (response.status === 200) {
+          toast.error(`Bạn đã Từ chối dự án ${groupName}`);
+          const updatedGroups = groups.filter((group) => group._id !== groupId);
+          dispatch(setMentorGroups(updatedGroups));
+          if (selectedGroup._id === groupId && updatedGroups.length > 0) {
+            setSelectedGroup(updatedGroups[0]);
+          } else if (updatedGroups.length === 0) {
+            setSelectedGroup(null);
+          }
+        }
+      })
+      .catch((err) => console.log("Error deleting group:", err));
+  };
+
   const appStyle = {
     display: "flex",
     fontFamily: "Open Sans, sans-serif",
@@ -93,10 +145,13 @@ function MentorGroups() {
             >
               <CardContent>
                 <Typography variant="h4" component="div" gutterBottom>
-                  {group.groupName}
+                  {group.groupName} &nbsp;
                   <small style={{ color: "red", fontStyle: "italic", fontWeight: "lighter" }}>
-                    {" "}
-                    (Đang chờ duyệt){" "}
+                    {group.status === "Pending"
+                      ? "(Đang chờ duyệt)"
+                      : group.status === "Approve"
+                      ? ""
+                      : "Giá trị không xác định"}
                   </small>
                 </Typography>
                 <Typography style={{ fontFamily: "math" }} variant="body2">
@@ -116,7 +171,18 @@ function MentorGroups() {
                     />
                   ))}
                 </div>
-                <div style={{ display: "flex", justifyContent: "end", marginTop: "5px" }}>
+                <div
+                  style={{
+                    display:
+                      group.status === "Pending"
+                        ? "flex"
+                        : group.status === "Approve"
+                        ? "none"
+                        : "",
+                    justifyContent: "end",
+                    marginTop: "5px",
+                  }}
+                >
                   <button
                     style={{
                       backgroundColor: "#FFF",
@@ -125,7 +191,9 @@ function MentorGroups() {
                       padding: "5px 8px",
                       border: "2px solid green",
                       borderRadius: "5px",
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleApprove(group._id, group.projectName)}
                   >
                     {" "}
                     Đồng ý
@@ -139,7 +207,9 @@ function MentorGroups() {
                       fontWeight: "bold",
                       borderRadius: "5px",
                       marginLeft: "5px",
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleDelete(group._id, group.projectName)}
                   >
                     Từ chối
                   </button>
