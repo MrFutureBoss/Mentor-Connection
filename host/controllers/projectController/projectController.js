@@ -141,5 +141,6 @@ export default {
   declineProjectPlanning,
   approveProjectChanging,
   declineProjectChanging,
+  reviseProject,
 };
 
