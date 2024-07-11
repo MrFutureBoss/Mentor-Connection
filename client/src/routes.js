@@ -25,6 +25,7 @@ import ListGroups from "layouts/sections/featuers/components/FeaturesOne/viewLis
 import Mentor from "layouts/user/mentor";
 import { setMentorGroups } from "app/slices/mentorSlice";
 import GroupsMatchedAdmin from "layouts/admin/list-groups-matched";
+import TeacherAccep from "layouts/user/teacher";
 
 function Routes() {
   const dispatch = useDispatch();
@@ -139,10 +140,18 @@ function Routes() {
   }
   if (userLogin?.role === 2 && allGroups?.length > 0) {
     result.push({
-      name: "Nhóm",
-      dropdown: false,
-      route: `/presentation/groups`,
-      component: <ListGroups />,
+      name: "Chức năng",
+      dropdown: true,
+      icon: <Icon>apps</Icon>,
+      description: "Chức năng",
+      collapse: [
+        { name: "Ghép Mentor", route: `/presentation/groups`, component: <ListGroups /> },
+        {
+          name: "Duyệt dự án",
+          route: `/presentation/request/groups`,
+          component: <TeacherAccep />,
+        },
+      ],
     });
   }
   if (userLogin?.role === 1) {

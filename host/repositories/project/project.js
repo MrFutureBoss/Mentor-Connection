@@ -1,4 +1,6 @@
+import Group from "../../models/groupModel.js";
 import Project from "../../models/projectModel.js";
+import mongoose from "mongoose";
 
 const createProject = async (projectData) => {
   try {
@@ -24,9 +26,90 @@ const getProjectById = async (id) => {
     throw new Error(error.message);
   }
 };
+const getPlanningProjectsForTeacher = async (teacherId) => {
+  return await Group.aggregate([
+    {
+      $lookup: {
+        from: "classes",
+        localField: "classId",
+        foreignField: "_id",
+        as: "classInfo",
+      },
+    },
+    {
+      $unwind: "$classInfo",
+    },
+    {
+      $match: {
+        "classInfo.teacherId": new mongoose.Types.ObjectId(teacherId),
+      },
+    },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "projectId",
+        foreignField: "_id",
+        as: "projectInfo",
+      },
+    },
+    {
+      $unwind: "$projectInfo",
+    },
+    {
+      $match: {
+        "projectInfo.status": "Planning",
+      },
+    },
+    {
+      $lookup: {
+        from: "projectcategories",
+        localField: "projectInfo._id",
+        foreignField: "projectId",
+        as: "projectCategories",
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "projectCategories.categoryId",
+        foreignField: "_id",
+        as: "categoryInfo",
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        groupId: "$_id",
+        groupName: "$name",
+        projectId: "$projectInfo._id",
+        projectName: "$projectInfo.name",
+        categories: "$categoryInfo.name",
+      },
+    },
+  ]);
+};
+
+const updateProjectStatus = async (projectId, newStatus) => {
+  try {
+    const updatedProject = await Project.findOneAndUpdate(
+      {
+        _id: new mongoose.Types.ObjectId(projectId),
+        status: "Planning",
+      },
+      { $set: { status: newStatus } },
+      { new: true }
+    );
+    return updatedProject;
+  } catch (error) {
+    console.error("Error in updateProjectStatus:", error);
+    throw new Error("Error updating project status");
+  }
+};
 
 export default {
   createProject,
   getProjectById,
   updateProject,
+  getPlanningProjectsForTeacher,
+  updateProjectStatus,
 };
