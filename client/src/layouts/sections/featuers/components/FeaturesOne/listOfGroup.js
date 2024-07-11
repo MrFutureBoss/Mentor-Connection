@@ -23,7 +23,6 @@ const ListOfGroups = () => {
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
-  console.log(groups);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
