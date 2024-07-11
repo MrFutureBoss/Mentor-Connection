@@ -40,4 +40,10 @@ projectRouter.put(
   verifyAccessToken,
   projectController.declineProjectChanging
 );
+
+projectRouter.patch(
+  "/:id/revise_project",
+  verifyAccessToken,
+  projectController.reviseProject
+);
 export default projectRouter;

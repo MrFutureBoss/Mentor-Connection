@@ -17,6 +17,7 @@ import bgImage from "assets/images/group.png";
 import Card from "@mui/material/Card";
 import getParams from "utilities/getParams";
 import Routes from "routes";
+import ReviseProject from "../leader/ReviseProject";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -65,11 +66,15 @@ const GroupDetail = () => {
     }
     dispatch(setActivePopup(false));
   }, [dispatch, jwt, userId, group, groupId]);
+  const { group: groupDetails } = useSelector((state) => state.group);
 
   return (
     <>
       <DefaultNavbar routes={Routes} />
-      {active_popup && <UpdateProject />}
+      {groupDetails?.project?.status !== "Planning" && active_popup && <UpdateProject />}
+      {["Planning", "InProgress", "Decline", "Changing"].includes(groupDetails?.project?.status) &&
+        active_popup && <ReviseProject />}
+
       <MKBox bgColor="#00000008">
         <MKBox
           minHeight="25rem"

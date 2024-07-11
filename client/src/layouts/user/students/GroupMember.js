@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { List, ListItem, ListItemText, Avatar, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePopup } from "app/slices/activeSlice";
@@ -132,7 +133,9 @@ const GroupMembers = () => {
             )}
             {userLogin?.isLeader &&
               userLogin?.groupId[0]?._id === groupId &&
-              groupDetails?.project?.status !== "Planning" && (
+              !["Planning", "InProgress", "Rejected", "Changing"].includes(
+                groupDetails?.project?.status
+              ) && (
                 <MKButton
                   onClick={() => dispatch(setActivePopup(true))}
                   sx={{
@@ -144,6 +147,24 @@ const GroupMembers = () => {
                   }}
                 >
                   Cập nhật dự án
+                </MKButton>
+              )}
+            {userLogin?.isLeader &&
+              userLogin?.groupId[0]?._id === groupId &&
+              ["Planning", "InProgress", "Decline", "Changing"].includes(
+                groupDetails?.project?.status
+              ) && (
+                <MKButton
+                  onClick={() => dispatch(setActivePopup(true))}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    margin: "8px",
+                    backgroundColor: "#d9d8d0",
+                  }}
+                >
+                  Sửa lại dự án
                 </MKButton>
               )}
           </Box>
@@ -229,7 +250,7 @@ const GroupMembers = () => {
                 />
                 <MKTypography sx={{ fontFamily: "inherit", fontWeight: "medium" }}>
                   {member.isLeader && <StarBorderIcon color="warning" sx={{ ml: "auto" }} />}
-                  {!member.isLeader && (
+                  {!member.isLeader && userLogin.role === 2 && (
                     <SettingsIcon
                       color="disabled"
                       className="custom-star-icon"
