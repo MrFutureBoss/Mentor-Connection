@@ -315,7 +315,30 @@ const findUser = async (query) => {
     throw new Error(error.message);
   }
 };
+const findLeaderByGroupId = async (groupId) => {
+  return await User.findOne({ groupId, isLeader: true }).exec();
+};
 
+const updateUserLeaderStatus = async (userId, isLeader) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error("User not found");
+
+  if (isLeader) {
+    if (user.isLeader) {
+      throw new Error('User is already a leader');
+    }
+    const existingLeader = await findLeaderByGroupId(user.groupId);
+    if (existingLeader) {
+      existingLeader.isLeader = false;
+      await existingLeader.save();
+    }
+  }
+
+  user.isLeader = isLeader;
+  await user.save();
+
+  return user;
+};
 export default {
   createNewUser,
   loginUser,
@@ -331,4 +354,6 @@ export default {
   comparePassword,
   updateUserPassword,
   findUser,
+  findLeaderByGroupId,
+  updateUserLeaderStatus,
 };

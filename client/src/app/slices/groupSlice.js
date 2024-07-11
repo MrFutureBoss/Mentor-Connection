@@ -21,9 +21,17 @@ const groupSlice = createSlice({
     setAllGroup: (state, action) => {
       state.allGroups = action.payload;
     },
+    updateGroupLeader(state, action) {
+      const { groupId, userId } = action.payload;
+      if (state.group && state.group._id === groupId) {
+        state.group.members.forEach((member) => {
+          member.isLeader = member._id === userId;
+        });
+      }
+    },
   },
 });
 
 const { reducer, actions } = groupSlice;
-export const { setGroups, setSelectedGroupId, setGroup, setAllGroup } = actions;
+export const { setGroups, setSelectedGroupId, setGroup, setAllGroup, updateGroupLeader } = actions;
 export default reducer;

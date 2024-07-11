@@ -22,5 +22,6 @@ user.patch(
 user.post("/login", userController.getUserLogin);
 user.post("/register", userController.addNewUser);
 user.post("/change_password", verifyAccessToken, userController.changePassword);
+user.patch("/update_leader", verifyAccessToken, userController.updateLeaderByTeacher);
 
 export default user;
