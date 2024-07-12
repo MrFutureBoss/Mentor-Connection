@@ -7,7 +7,7 @@ const updateProject = async (req, res) => {
     const project = await projectDAO.updateProject(id, {
       name,
       description,
-      status
+      status,
     });
     res.status(200).json(project);
   } catch (error) {
@@ -22,7 +22,7 @@ const reviseProject = async (req, res) => {
     const project = await projectDAO.updateProject(id, {
       name,
       description,
-      status
+      status,
     });
     res.status(200).json(project);
   } catch (error) {
@@ -141,5 +141,5 @@ export default {
   declineProjectPlanning,
   approveProjectChanging,
   declineProjectChanging,
+  reviseProject,
 };
-

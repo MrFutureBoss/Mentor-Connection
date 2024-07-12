@@ -115,8 +115,12 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
 
   const handleCloseToast = () => {
     setToastMessage("");
+    toast.dismiss();
   };
-
+  const handlePopupClose = () => {
+    handleCloseToast(); // Dismiss toasts when popup closes
+    handleClose(); // Close the popup
+  };
   const columns = [
     { field: "groupName", headerName: "Tên nhóm", flex: 1 },
     { field: "projectName", headerName: "Tên dự án", flex: 1.5 },
@@ -174,7 +178,7 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xl">
+      <Dialog open={open} onClose={handlePopupClose} fullWidth maxWidth="xl">
         <DialogTitle>Danh sách các nhóm cần cập nhật lại dự án</DialogTitle>
         <DialogContent>
           <Box sx={{ height: 600, width: "100%" }}>
@@ -185,6 +189,21 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
               rowsPerPageOptions={[13]}
               pagination
               disableSelectionOnClick
+              components={{
+                NoRowsOverlay: () => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    Chưa có dự án nào cần duyệt
+                  </Box>
+                ),
+              }}
             />
           </Box>
         </DialogContent>

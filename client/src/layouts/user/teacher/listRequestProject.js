@@ -212,6 +212,21 @@ const ProjectRequest = () => {
               rowsPerPageOptions={[13]}
               pagination
               disableSelectionOnClick
+              components={{
+                NoRowsOverlay: () => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    Chưa có dự án nào cần duyệt
+                  </Box>
+                ),
+              }}
             />
           </Box>
         </Box>
