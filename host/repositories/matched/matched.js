@@ -2,10 +2,10 @@ import Group from "../../models/groupModel.js";
 import Matched from "../../models/matchedModel.js";
 import TemporaryMatching from "../../models/temporaryMatching.js";
 
-const addMatched = async (groupId, mentorId, status) => {
+const addMatched = async (groupId, mentorId, status, time) => {
   try {
     await TemporaryMatching.deleteOne({ groupId: groupId });
-    return await Matched.create({ groupId: groupId, mentorId: mentorId, status: status });
+    return await Matched.create({ groupId: groupId, mentorId: mentorId, status: status, time: time });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -145,10 +145,48 @@ const updateMatchedByGroupId = async (groupId, updateData) => {
   }
 };
 
+
+const addTimeById = async (_id, newTime) => {
+  try {
+    const result = await Matched.updateOne(
+      { _id: _id },
+      { $push: { time: newTime } }
+    ).exec();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const deleteTimeById = async (_id, eventId) => {
+  try {
+    const result = await Matched.updateOne(
+      { _id: _id },
+      { $pull: { time: { _id: eventId } } }
+    ).exec();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const getMatchedById = async (id) => {
+  try {
+    const result = await Matched.find({ _id: id }).exec();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+
 export default {
   addMatched,
   addAllMatching,
   deleteMatchedByGroupId,
   getMatchedGroupsWithDetails,
   updateMatchedByGroupId,
+  addTimeById,
+  deleteTimeById,
+  getMatchedById,
 };

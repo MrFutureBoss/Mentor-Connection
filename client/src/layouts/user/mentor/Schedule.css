@@ -1,0 +1,68 @@
+.App {
+  text-align: center;
+}
+
+.input-container {
+  margin-bottom: 20px;
+}
+
+.input-field {
+  width: 20%;
+  margin-right: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.input-field.react-datepicker-ignore-onclickoutside {
+  position: relative;
+  z-index: 1000;
+}
+
+.add-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+  width: auto;
+}
+.rbc-event-content {
+  height: 100%;
+}
+.event-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.event-info {
+  flex-grow: 1; /* Ensures the event title takes up remaining space */
+}
+
+.delete-button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
+}
+
