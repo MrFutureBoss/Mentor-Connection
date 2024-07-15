@@ -3,6 +3,8 @@
 }
 
 .input-container {
+  width: 80%;
+  margin: auto;
   margin-bottom: 20px;
 }
 
@@ -64,5 +66,20 @@
 
 .delete-button:hover {
   background-color: #d32f2f;
+}
+
+.custom-input-field {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.custom-input-field:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
