@@ -155,7 +155,7 @@ function MentorGroups() {
                         ? "(Đang chờ duyệt)"
                         : group.status === "Approve"
                           ? ""
-                          : "Giá trị không xác định"}
+                          : "(Đang chờ duyệt)"}
                     </small>
                     {/* <MKButton onClick={() => dispatch(setActivePopup(!active_popup))}>
                     Chỉnh sửa thông tin cá nhân

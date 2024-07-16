@@ -71,7 +71,7 @@ const handleAddEvent = () => {
   }
 
   // Kiểm tra điều kiện start không được trước end
-  if (newEvent.start >= newEvent.end) {
+  if (newEvent.start > newEvent.end) {
     console.log("Thời gian bắt đầu không được trước thời gian kết thúc.");
     toast.error("Thời gian bắt đầu không được trước thời gian kết thúc.");
     return;
@@ -149,16 +149,14 @@ const handleAddEvent = () => {
       });
   };
 
-  const today = new Date().toISOString().substring(0, 10);
-
 
   const EventComponent = ({ event }) => {
-    const truncatedTitle =
-      event.title.length > 10 ? `${event.title.substring(0, 5)}...` : event.title;
+    // const truncatedTitle =
+    //   event.title.length > 10 ? `${event.title.substring(0, 5)}...` : event.title;
 
     return (
       <div style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
-        <span title={event.title}>{truncatedTitle}</span>
+        <span title={event.title}>{event.title}</span>
         <button
           onClick={() => handleDelete(event._id)}
           style={{
@@ -248,7 +246,6 @@ const handleAddEvent = () => {
                 <input
                   type="date"
                   placeholder="Chọn ngày"
-                  value={newEvent.date ? newEvent.date.toISOString().substring(0, 10) : today}
                   onChange={(e) => setNewEvent({ ...newEvent, date: new Date(e.target.value) })}
                   className="input-field"
                 />

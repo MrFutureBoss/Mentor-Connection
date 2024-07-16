@@ -14,6 +14,12 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { updateGroupLeader } from "app/slices/groupSlice";
+import { format } from 'date-fns';
+import { vi } from 'date-fns/locale'; // Import locale data for Vietnamese
+import PushPinIcon from '@mui/icons-material/PushPin';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+
 const GroupMembers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -63,6 +69,9 @@ const GroupMembers = () => {
   };
   const handleUserDetailClick = (userId) => {
     navigate(`/user/${userId}/profile`);
+  };
+  const openMeet = (email) => {
+    window.open(`https://meet.google.com/new?email=${encodeURIComponent(email)}`, '_blank'); // Mở liên kết Meet trong tab mới
   };
   return (
     <Box
@@ -133,23 +142,23 @@ const GroupMembers = () => {
                         groupDetails?.project?.status == "Decline"
                           ? "red"
                           : groupDetails?.project?.status == "InProgress"
-                          ? "#00FF00"
-                          : groupDetails?.project?.status == "Changing"
-                          ? "#0066CC"
-                          : groupDetails?.project?.status == "Planning"
-                          ? "#009900"
-                          : "",
+                            ? "#00FF00"
+                            : groupDetails?.project?.status == "Changing"
+                              ? "#0066CC"
+                              : groupDetails?.project?.status == "Planning"
+                                ? "#009900"
+                                : "",
                     }}
                   >
                     {groupDetails?.project?.status == "Changing"
                       ? "Đang thay đổi"
                       : groupDetails?.project?.status == "Decline"
-                      ? "Bị từ chối"
-                      : groupDetails?.project?.status == "Planning"
-                      ? "Đang chờ duyệt"
-                      : groupDetails?.project?.status == "InProgress"
-                      ? "Đang hoạt động"
-                      : ""}
+                        ? "Bị từ chối"
+                        : groupDetails?.project?.status == "Planning"
+                          ? "Đang chờ duyệt"
+                          : groupDetails?.project?.status == "InProgress"
+                            ? "Đang hoạt động"
+                            : ""}
                   </span>
                 </MKTypography>
               </MKBox>
@@ -211,7 +220,7 @@ const GroupMembers = () => {
             <MKTypography variant="h6" gutterBottom>
               {groupDetails?.name}
               <MKTypography variant="h6" component="span" color="primary" sx={{ ml: 1 }}>
-                ({groupDetails?.userCount} Students)
+                ({groupDetails?.userCount} Thành viên)
               </MKTypography>
             </MKTypography>
           </MKTypography>
@@ -330,6 +339,52 @@ const GroupMembers = () => {
             <MKTypography variant="caption" sx={{ color: "text.primary" }}>
               {groupDetails?.mentor?.[0].degree}
             </MKTypography>
+          </Box>
+        )}
+        {groupDetails?.matched?.length > 0 && groupDetails?.mentor?.length > 0 && (
+          <Box
+            sx={{
+              padding: 3,
+              textAlign: "left",
+              marginBottom: 2,
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15)",
+              borderRadius: "12px",
+              border: "1px solid rgba(225, 225, 225, 0.6)",
+              backgroundColor: "white",
+              transition: "transform 0.3s ease-in-out",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            }}
+          >
+            <MKTypography variant="h5" sx={{ fontFamily: "inherit", fontWeight: "bold" }}>
+              Lịch Họp -             <button
+                style={{
+                  color: "#FFF", fontSize: "15px", fontWeight: "bold", padding: "5px 10px", backgroundColor: "orange",
+                  border: "1px solid orange", borderRadius: "5px", cursor: "pointer"
+                }}
+                onClick={() => openMeet(groupDetails?.mentor?.[0].email)}
+              >
+                Meet-URL
+              </button>
+            </MKTypography>
+            {groupDetails?.matched?.map((match) =>
+              match.time.map((meet, meetIndex) => (
+                <MKTypography
+                  key={meet._id}
+                  variant="body2"
+                  sx={{ color: "text.secondary", margin: "10px auto", backgroundColor: "#f9f5d2", padding:'10px', borderRadius: "5px" }}
+                >
+                  <p>
+                    <strong><PushPinIcon style={{color: "red"}}/> Buổi {meetIndex + 1}: </strong>{format(new Date(meet.start), "EEEE, 'ngày' dd 'tháng' MM 'năm' yyyy", { locale: vi })}
+                  </p>
+                  <p>
+                    <strong><AccessTimeIcon /> Bắt đầu từ </strong>{format(new Date(meet.start), "HH:mm", { locale: vi })} giờ <strong>đến</strong> {format(new Date(meet.end), "HH:mm", { locale: vi })} giờ
+                  </p>
+                  <p><strong><EditNoteIcon style={{ color: "#00BFFF"}}/> Nội dung cuộc họp:</strong> {meet.title}</p>
+                </MKTypography>
+              ))
+            )}
           </Box>
         )}
       </Box>
