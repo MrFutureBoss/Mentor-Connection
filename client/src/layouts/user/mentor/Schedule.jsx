@@ -18,6 +18,9 @@ import { Container, Grid, Modal, Slide, Card, Icon } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setActivePopup_Schedule } from "app/slices/activeSlice";
 import MKTypography from "components/MKTypography";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const locales = {
   vi,
 };
@@ -60,57 +63,75 @@ const Schedule = ({ id }) => {
       .catch((err) => console.log("Error fetching calendar events:", err));
   }, [id]);
 
-  const handleAddEvent = () => {
-    const formattedStartDate = format(
-      new Date(newEvent.date.setHours(newEvent.start.getHours(), newEvent.start.getMinutes())),
-      "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
-    );
-    const formattedEndDate = format(
-      new Date(newEvent.date.setHours(newEvent.end.getHours(), newEvent.end.getMinutes())),
-      "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
-    );
+const handleAddEvent = () => {
+  // Kiểm tra các trường input
+  if (!newEvent.title || !newEvent.date || !newEvent.start || !newEvent.end) {
+    toast.info("Vui lòng điền đầy đủ thông tin cuộc họp.");
+    return;
+  }
 
-    const eventData = {
-      title: newEvent.title,
-      allDay: false,
-      start: formattedStartDate,
-      end: formattedEndDate,
-    };
+  // Kiểm tra điều kiện start không được trước end
+  if (newEvent.start >= newEvent.end) {
+    console.log("Thời gian bắt đầu không được trước thời gian kết thúc.");
+    toast.error("Thời gian bắt đầu không được trước thời gian kết thúc.");
+    return;
+  }
 
-    axios
-      .post(`${BASE_URL}/matched/${id}`, eventData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log("Response:", response);
-        if (response.status === 200) {
-          console.log("Event added successfully");
-          // Fetch updated events after adding
-          axios
-            .get(`${BASE_URL}/matched/${id}`)
-            .then((response) => {
-              if (response.data && response.data.length > 0) {
-                const fetchedEvents = response.data[0].time.map((event) => ({
-                  title: event.title,
-                  allDay: event.allDay,
-                  start: new Date(event.start),
-                  end: new Date(event.end),
-                  _id: event._id, // Include event ID
-                }));
-                setAllEvents(fetchedEvents);
-              }
-            })
-            .catch((err) => console.log("Error fetching calendar events:", err));
-        } else {
-          console.log("Failed to add event:", response.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error adding event:", error);
-      });
+  const formattedStartDate = format(
+    new Date(newEvent.date.setHours(newEvent.start.getHours(), newEvent.start.getMinutes())),
+    "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
+  );
+  const formattedEndDate = format(
+    new Date(newEvent.date.setHours(newEvent.end.getHours(), newEvent.end.getMinutes())),
+    "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
+  );
+
+  const eventData = {
+    title: newEvent.title,
+    allDay: false,
+    start: formattedStartDate,
+    end: formattedEndDate,
   };
+
+  axios
+    .post(`${BASE_URL}/matched/${id}`, eventData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      console.log("Response:", response);
+      if (response.status === 200) {
+        console.log("Event added successfully");
+        toast.success("Cuộc họp đã được thêm thành công - hãy vào phần lịch họp để xem chi tiết");
+        // Fetch updated events after adding
+        axios
+          .get(`${BASE_URL}/matched/${id}`)
+          .then((response) => {
+            if (response.data && response.data.length > 0) {
+              const fetchedEvents = response.data[0].time.map((event) => ({
+                title: event.title,
+                allDay: event.allDay,
+                start: new Date(event.start),
+                end: new Date(event.end),
+                _id: event._id, // Include event ID
+              }));
+              setAllEvents(fetchedEvents);
+            }
+          })
+          .catch((err) => console.log("Error fetching calendar events:", err));
+      } else {
+        console.log("Failed to add event:", response.data);
+        toast.error("Thêm cuộc họp thất bại");
+      }
+    })
+    .catch((error) => {
+      console.error("Error adding event:", error);
+      toast.error("Đã xảy ra lỗi khi thêm cuộc họp");
+    });
+};
+
+
 
   const handleDelete = (eventId) => {
     axios
@@ -128,27 +149,34 @@ const Schedule = ({ id }) => {
       });
   };
 
-  // Custom Event Component with Delete Button
-  const EventComponent = ({ event }) => (
-    <div style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
-      <span>{event.title}</span>
-      <button
-        onClick={() => handleDelete(event._id)}
-        style={{
-          backgroundColor: "#FFF",
-          color: "red",
-          padding: "5px 8px",
-          border: "2px solid red",
-          fontWeight: "bold",
-          borderRadius: "5px",
-          marginLeft: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Hủy lịch
-      </button>
-    </div>
-  );
+  const today = new Date().toISOString().substring(0, 10);
+
+
+  const EventComponent = ({ event }) => {
+    const truncatedTitle =
+      event.title.length > 10 ? `${event.title.substring(0, 5)}...` : event.title;
+
+    return (
+      <div style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+        <span title={event.title}>{truncatedTitle}</span>
+        <button
+          onClick={() => handleDelete(event._id)}
+          style={{
+            backgroundColor: "#FFF",
+            color: "red",
+            padding: "5px 8px",
+            border: "2px solid red",
+            fontWeight: "bold",
+            borderRadius: "5px",
+            marginLeft: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Hủy lịch
+        </button>
+      </div>
+    );
+  };
 
   // PropTypes for EventComponent
   EventComponent.propTypes = {
@@ -217,12 +245,11 @@ const Schedule = ({ id }) => {
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                 />
-                <DatePicker
-                  placeholderText="Chọn ngày"
-                  selected={newEvent.date}
-                  onChange={(date) => setNewEvent({ ...newEvent, date })}
-                  dateFormat="dd-MM-yyyy"
-                  locale="vi"
+                <input
+                  type="date"
+                  placeholder="Chọn ngày"
+                  value={newEvent.date ? newEvent.date.toISOString().substring(0, 10) : today}
+                  onChange={(e) => setNewEvent({ ...newEvent, date: new Date(e.target.value) })}
                   className="input-field"
                 />
                 <DatePicker
@@ -252,7 +279,7 @@ const Schedule = ({ id }) => {
                   className="input-field"
                 />
                 <button className="add-button" onClick={handleAddEvent}>
-                  Thêm sự kiện
+                  Thêm cuộc hẹn
                 </button>
               </div>
               <Calendar
