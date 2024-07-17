@@ -34,7 +34,6 @@ const TemporaryMatching = () => {
           config
         )
         .then((res) => {
-          console.log(res.data);
           dispatch(setTemporaryMatching(res.data));
         })
         .catch((err) => checkError(err, navigate));

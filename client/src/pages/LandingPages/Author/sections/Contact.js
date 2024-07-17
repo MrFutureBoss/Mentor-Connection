@@ -150,7 +150,7 @@ function Contact() {
                         <MKInput
                           variant="standard"
                           label="My name is"
-                          placeholder="Full Name"
+                          placeholder="Họ và tên"
                           InputLabelProps={{ shrink: true }}
                           fullWidth
                         />

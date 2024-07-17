@@ -203,7 +203,6 @@ const ViewGroups = ({ teacherId }) => {
     mentorcategories: PropTypes.array.isRequired,
     label: PropTypes.string,
   };
-  console.log(allGroups);
   return (
     <>
       <TemporaryMatching />

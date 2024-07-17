@@ -1,19 +1,19 @@
-/* eslint-disable prettier/prettier */
-import { List, ListItem, ListItemText, Avatar, Box } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { setActivePopup } from "app/slices/activeSlice";
-import MKButton from "components/MKButton";
-import "../../sections/featuers/components/FeaturesOne/studentList.css";
+import React, { useEffect } from "react";
+import { Box, List, ListItem, ListItemText, Avatar } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import getParams from "utilities/getParams";
+import SettingsIcon from "@mui/icons-material/Settings";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { BASE_URL } from "utilities/initialValue";
 import MKTypography from "components/MKTypography";
 import MKBox from "components/MKBox";
-import SettingsIcon from "@mui/icons-material/Settings";
-import Swal from "sweetalert2";
-import axios from "axios";
-import { BASE_URL } from "utilities/initialValue";
+import MKButton from "components/MKButton";
+import getParams from "utilities/getParams";
+import { setActivePopup } from "app/slices/activeSlice";
 import { updateGroupLeader } from "app/slices/groupSlice";
+
 const GroupMembers = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,9 +61,37 @@ const GroupMembers = () => {
       }
     });
   };
+
   const handleUserDetailClick = (userId) => {
     navigate(`/user/${userId}/profile`);
   };
+
+  const handleUpdateProject = () => {
+    dispatch(setActivePopup(true));
+  };
+  useEffect(() => {
+    if (groupDetails?.project?.status === "Decline") {
+      showDeclineMessage();
+    }
+  }, [groupDetails]);
+  const showDeclineMessage = () => {
+    if (userLogin?.role === 4 && groupDetails?.members?.some((member) => member.isLeader)) {
+      Swal.fire({
+        title: "Dự án đã bị từ chối",
+        text: groupDetails.project?.declineMessage,
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Cập nhật lại dự án",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleUpdateProject();
+        }
+      });
+    } else {
+      console.log("Không đáp ứng điều kiện hiển thị thông báo");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -127,13 +155,46 @@ const GroupMembers = () => {
                   Tình trạng dự án:
                 </MKTypography>
                 <MKTypography fontSize=".825rem" color="text">
-                  {groupDetails?.project?.status}
+                  <span
+                    style={{
+                      color:
+                        groupDetails?.project?.status === "Decline"
+                          ? "red"
+                          : groupDetails?.project?.status === "InProgress"
+                          ? "#00FF00"
+                          : groupDetails?.project?.status === "Changing"
+                          ? "#0066CC"
+                          : groupDetails?.project?.status === "Planning"
+                          ? "#009900"
+                          : "",
+                    }}
+                  >
+                    {groupDetails?.project?.status === "Changing"
+                      ? "Đang thay đổi"
+                      : groupDetails?.project?.status === "Decline"
+                      ? "Bị từ chối"
+                      : groupDetails?.project?.status === "Planning"
+                      ? "Đang chờ duyệt"
+                      : groupDetails?.project?.status === "InProgress"
+                      ? "Đang hoạt động"
+                      : ""}
+                  </span>
+                </MKTypography>
+              </MKBox>
+            )}
+            {groupDetails?.project?.status === "Decline" && (
+              <MKBox display="flex" gap="0.5rem">
+                <MKTypography fontSize=".825rem" color="text" fontWeight="medium">
+                  Lý do từ chối:
+                </MKTypography>
+                <MKTypography fontSize=".825rem" color="text">
+                  {groupDetails?.project?.declineMessage}
                 </MKTypography>
               </MKBox>
             )}
             {userLogin?.isLeader &&
               userLogin?.groupId[0]?._id === groupId &&
-              !["Planning", "InProgress", "Rejected", "Changing"].includes(
+              !["Planning", "InProgress", "Decline", "Changing"].includes(
                 groupDetails?.project?.status
               ) && (
                 <MKButton

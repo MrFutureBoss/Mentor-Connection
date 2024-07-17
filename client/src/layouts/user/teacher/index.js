@@ -36,6 +36,7 @@ const TeacherAccep = () => {
         .catch((err) => checkError(err, navigate));
     }
   }, []);
+
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -78,7 +79,8 @@ const TeacherAccep = () => {
           <Chip
             label={
               <span>
-                Các nhóm cập nhật lại: <span className="blinking-text">{numChangingProjects}</span>
+                Các nhóm cập nhật lại:{" "}
+                <span className="blinking-text">{numChangingProjects} nhóm</span>
               </span>
             }
             onClick={handleOpenDialog}

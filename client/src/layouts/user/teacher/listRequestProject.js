@@ -3,23 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  Button,
-  Slide,
-  Box,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Backdrop,
-} from "@mui/material";
+import { Button, Slide, Box } from "@mui/material";
 import { checkError } from "utilities/auth";
 import { BASE_URL } from "utilities/initialValue";
-import { setProjectRequest } from "app/slices/projectSlice";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import Swal from "sweetalert2";
 
 const ProjectRequest = () => {
   const dispatch = useDispatch();
@@ -28,9 +15,9 @@ const ProjectRequest = () => {
   const { userLogin } = useSelector((state) => state.user);
 
   const [currentProjects, setCurrentProjects] = useState([]);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false); // State to control confirm dialog
   const [selectedProjectId, setSelectedProjectId] = useState(null); // State to store selected project ID
   const [confirmActionType, setConfirmActionType] = useState(""); // State to store the type of action to confirm
+  const [declineMessage, setDeclineMessage] = useState(""); // State to store decline message
 
   useEffect(() => {
     if (userLogin?._id) {
@@ -43,7 +30,6 @@ const ProjectRequest = () => {
         })
         .then((res) => {
           setCurrentProjects(res.data);
-          dispatch(setProjectRequest(res.data));
         })
         .catch((err) => checkError(err, navigate));
     }
@@ -74,7 +60,7 @@ const ProjectRequest = () => {
     axios
       .put(
         apiUrl,
-        {},
+        { declineMessage }, // Send decline message in the request body
         {
           headers: {
             "Content-Type": "application/json",
@@ -89,58 +75,74 @@ const ProjectRequest = () => {
         setCurrentProjects(updatedProjects);
 
         if (confirmActionType === "approve") {
-          toast.success(successMessage, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            icon: <CheckCircleIcon />,
+          Swal.fire({
+            title: successMessage,
+            icon: "success",
+            timer: 5000,
+            showConfirmButton: false,
           });
         } else if (confirmActionType === "decline") {
-          toast.error(successMessage, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            icon: <CancelIcon />,
+          Swal.fire({
+            title: successMessage,
+            icon: "error",
+            timer: 5000,
+            showConfirmButton: false,
           });
         }
-
-        handleCloseDialog();
       })
       .catch((err) => {
         checkError(err, navigate);
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          icon: <CancelIcon />,
+        Swal.fire({
+          title: errorMessage,
+          icon: "error",
+          timer: 5000,
+          showConfirmButton: false,
         });
-
-        handleCloseDialog();
       });
   };
 
   const confirmAction = (projectId, actionType) => {
     setSelectedProjectId(projectId);
     setConfirmActionType(actionType);
-    setConfirmDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setSelectedProjectId(null);
-    setConfirmActionType("");
-    setConfirmDialogOpen(false);
+    if (actionType === "decline") {
+      Swal.fire({
+        title: "Bạn có chắc chắn muốn từ chối dự án này?",
+        icon: "warning",
+        input: "textarea",
+        inputLabel: "Lý do từ chối",
+        inputPlaceholder: "Nhập lý do từ chối...",
+        inputAttributes: {
+          "aria-label": "Nhập lý do từ chối",
+        },
+        showCancelButton: true,
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy",
+        inputValidator: (value) => {
+          if (!value) {
+            return "Bạn cần nhập lý do từ chối!";
+          }
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setDeclineMessage(result.value);
+          handleAction();
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "Bạn có chắc chắn muốn duyệt dự án này?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleAction();
+        }
+      });
+    }
   };
 
   const columns = [
@@ -231,33 +233,6 @@ const ProjectRequest = () => {
           </Box>
         </Box>
       </Slide>
-
-      {/* Confirm dialog */}
-      <Dialog
-        open={confirmDialogOpen}
-        onClose={handleCloseDialog}
-        fullWidth
-        maxWidth="xs"
-        TransitionComponent={Slide}
-        TransitionProps={{ direction: "up" }}
-        BackdropComponent={Backdrop}
-        BackdropProps={{ invisible: true }}
-      >
-        <DialogTitle>Xác nhận</DialogTitle>
-        <DialogContent>
-          <p>Bạn có chắc chắn muốn thực hiện hành động này?</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAction} color="primary">
-            Đồng ý
-          </Button>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Hủy
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <ToastContainer />
     </>
   );
 };
