@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect } from "react";
 import { Box, List, ListItem, ListItemText, Avatar } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
