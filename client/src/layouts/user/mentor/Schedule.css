@@ -82,4 +82,18 @@
   border-color: #007bff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
-
+.rbc-event {
+  background-color: #e153e1; /* Màu nền */
+  color: #fff;              /* Màu chữ */
+  border: none;             /* Xóa bỏ viền nếu cần */
+  border-radius: 4px;       /* Bo góc */
+  padding: 4px; 
+  height: 100%;            /* Khoảng cách bên trong */
+}
+.rbc-header{
+  background-color: #296aae;
+  color : #fff
+}
+.rbc-toolbar-label{
+  font-size: 30px;
+}
