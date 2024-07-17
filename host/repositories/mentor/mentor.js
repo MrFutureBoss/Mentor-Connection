@@ -66,7 +66,9 @@ const getMentorGroups = async (mentorId) => {
               rollNumber: "$groupMembers.rollNumber",
             },
           },
+          matchedId: { $first: "$_id" },
           status: { $first: "$status" },
+          time: { $push: "$time" }, // Add the 'time' field here
         },
       },
       {
@@ -77,6 +79,8 @@ const getMentorGroups = async (mentorId) => {
           members: 1,
           memberCount: { $size: "$members" },
           status: 1,
+          matchedId: 1,
+          time: 1, // Include 'time' in the project stage to output it
         },
       },
     ]);

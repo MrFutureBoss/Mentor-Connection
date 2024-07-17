@@ -1,5 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
+const eventSchema = new Schema({
+  title: String,
+  allDay: { type: Boolean, default: false },
+  start: { type: Date, required: true },
+  end: { type: Date, required: true }
+});
+
 const MatchedSchema = new Schema(
   {
     groupId: {
@@ -11,6 +18,7 @@ const MatchedSchema = new Schema(
       ref: "User",
     },
     status: { type: String },
+    time: [eventSchema],
   },
   {
     timestamps: true,

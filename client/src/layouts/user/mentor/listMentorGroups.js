@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import List from "@mui/material/List";
@@ -15,33 +16,25 @@ import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setMentorGroups } from "app/slices/mentorSlice";
 import logoAvatar from "../../../assets/images/logos/gray-logos/logo.webp";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { toast } from "react-toastify";
-
+// import { useNavigate } from "react-router-dom";
+import { setActivePopup_Schedule } from "app/slices/activeSlice";
+import Schedule from "./Schedule";
 function MentorGroups() {
   const groups = useSelector((state) => state.mentor.mentorGroups);
   const [selectedGroup, setSelectedGroup] = useState(groups[0]);
   const dispatch = useDispatch();
+  const { active_popup_schedule } = useSelector((state) => state.active);
+  const [matchedId, setMatchedId] = useState({});
   const jwt = localStorage.getItem("jwt");
-
+  // const navigate = useNavigate();
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jwt}`,
     },
   };
-  console.log(jwt);
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/mentor/mentor_groups`, config)
-      .then((response) => {
-        dispatch(setMentorGroups(response.data));
-        if (response.data && response.data.length > 0) {
-          setSelectedGroup(response.data[0]);
-        }
-      })
-      .catch((err) => console.log("Error fetching mentor groups:", err));
-  }, [dispatch]);
 
   useEffect(() => {
     axios
@@ -57,6 +50,11 @@ function MentorGroups() {
 
   const handleClick = (group) => {
     setSelectedGroup(group);
+  };
+
+  const handleSchedule = (id) => {
+    setMatchedId(id);
+    dispatch(setActivePopup_Schedule(!active_popup_schedule))
   };
 
   const handleApprove = (groupId, groupName) => {
@@ -128,167 +126,196 @@ function MentorGroups() {
   };
 
   return (
-    <div style={appStyle}>
-      <div style={leftStyle}>
-        <List>
-          {groups.map((group) => (
+    <>
+      <div style={appStyle}>
+        <div style={leftStyle}>
+          <List>
+            {groups.map((group) => (
+              <Card
+                key={group._id}
+                onClick={() => handleClick(group)}
+                sx={{
+                  marginBottom: 2,
+                  transition: "transform 0.3s, box-shadow 0.3s",
+                  transform: selectedGroup === group ? "scale(1.05)" : "scale(1)",
+                  boxShadow: selectedGroup === group ? 3 : 1,
+                  bgcolor: blueGrey[50],
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h4"
+                    component="div"
+                    gutterBottom
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    {group.groupName} &nbsp;
+                    <small style={{ color: "red", fontStyle: "italic", fontWeight: "lighter" }}>
+                      {group.status === "Pending"
+                        ? "(Đang chờ duyệt)"
+                        : group.status === "Approve"
+                          ? ""
+                          : "(Đang chờ duyệt)"}
+                    </small>
+                    {/* <MKButton onClick={() => dispatch(setActivePopup(!active_popup))}>
+                    Chỉnh sửa thông tin cá nhân
+                  </MKButton> */}
+
+                    <button
+                      style={{
+                        display: group.status === "Pending" ? "none" : "flex",
+                        backgroundColor: "#2596be",
+                        color: "white",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                        border: "1px solid #2596be",
+                        fontWeight: "bold",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleSchedule(group.matchedId)}
+                    >
+                      <CalendarMonthIcon style={{ height: "20px", width: "20px" }} />&nbsp;<p>Cập nhật lịch</p>
+                    </button>
+                  </Typography>
+                  <Typography style={{ fontFamily: "math" }} variant="body2">
+                    Thành viên: {group.memberCount} người
+                  </Typography>
+                  <Typography variant="h6" gutterBottom>
+                    Dự án: {group.projectName}
+                  </Typography>
+                  <div>
+                    {group.projectCategories.map((category, index) => (
+                      <Chip
+                        key={index}
+                        label={category}
+                        color="primary"
+                        variant="outlined"
+                        style={{ margin: "2px" }}
+                      />
+                    ))}
+                  </div>
+                  <div
+                    style={{
+                      display:
+                        group.status === "Pending"
+                          ? "flex"
+                          : group.status === "Approve"
+                            ? "none"
+                            : "",
+                      justifyContent: "end",
+                      marginTop: "5px",
+                    }}
+                  >
+                    <button
+                      style={{
+                        backgroundColor: "#FFF",
+                        color: "green",
+                        fontWeight: "bold",
+                        padding: "5px 8px",
+                        border: "2px solid green",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleApprove(group._id, group.projectName)}
+                    >
+                      {" "}
+                      Đồng ý
+                    </button>
+                    <button
+                      style={{
+                        backgroundColor: "#FFF",
+                        color: "red",
+                        padding: "5px 8px",
+                        border: "2px solid red",
+                        fontWeight: "bold",
+                        borderRadius: "5px",
+                        marginLeft: "5px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleDelete(group._id, group.projectName)}
+                    >
+                      Từ chối
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </List>
+        </div>
+        <div style={rightStyle}>
+          {selectedGroup && (
             <Card
-              key={group._id}
-              onClick={() => handleClick(group)}
-              sx={{
-                marginBottom: 2,
-                transition: "transform 0.3s, box-shadow 0.3s",
-                transform: selectedGroup === group ? "scale(1.05)" : "scale(1)",
-                boxShadow: selectedGroup === group ? 3 : 1,
-                bgcolor: blueGrey[50],
-              }}
+              sx={{ width: "90%", height: "auto", padding: "10px", boxShadow: 3, margin: "auto" }}
             >
               <CardContent>
                 <Typography variant="h4" component="div" gutterBottom>
-                  {group.groupName} &nbsp;
-                  <small style={{ color: "red", fontStyle: "italic", fontWeight: "lighter" }}>
-                    {group.status === "Pending"
-                      ? "(Đang chờ duyệt)"
-                      : group.status === "Approve"
-                      ? ""
-                      : "Giá trị không xác định"}
-                  </small>
+                  {selectedGroup.groupName}
                 </Typography>
-                <Typography style={{ fontFamily: "math" }} variant="body2">
-                  Thành viên: {group.memberCount} người
-                </Typography>
-                <Typography variant="h6" gutterBottom>
-                  Dự án: {group.projectName}
-                </Typography>
-                <div>
-                  {group.projectCategories.map((category, index) => (
-                    <Chip
-                      key={index}
-                      label={category}
-                      color="primary"
-                      variant="outlined"
-                      style={{ margin: "2px" }}
-                    />
-                  ))}
-                </div>
-                <div
-                  style={{
-                    display:
-                      group.status === "Pending"
-                        ? "flex"
-                        : group.status === "Approve"
-                        ? "none"
-                        : "",
-                    justifyContent: "end",
-                    marginTop: "5px",
-                  }}
+                <Typography
+                  color="primary"
+                  style={{ fontSize: "18px" }}
+                  variant="h6"
+                  gutterBottom
+                  mb={2}
                 >
-                  <button
-                    style={{
-                      backgroundColor: "#FFF",
-                      color: "green",
-                      fontWeight: "bold",
-                      padding: "5px 8px",
-                      border: "2px solid green",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => handleApprove(group._id, group.projectName)}
-                  >
-                    {" "}
-                    Đồng ý
-                  </button>
-                  <button
-                    style={{
-                      backgroundColor: "#FFF",
-                      color: "red",
-                      padding: "5px 8px",
-                      border: "2px solid red",
-                      fontWeight: "bold",
-                      borderRadius: "5px",
-                      marginLeft: "5px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => handleDelete(group._id, group.projectName)}
-                  >
-                    Từ chối
-                  </button>
-                </div>
+                  Dự án: {selectedGroup.projectName}
+                </Typography>
+
+                <List>
+                  {selectedGroup.members.map((member, index) => (
+                    <ListItem
+                      key={index}
+                      style={{ padding: "6px", backgroundColor: "#00000008" }}
+                      sx={{ bgcolor: "white", my: 1, borderRadius: "10px", boxShadow: 1 }}
+                    >
+                      <ListItemAvatar style={{ padding: "10px" }}>
+                        <Avatar src={member.avatar}>
+                          {member.avatar ? null : (
+                            <img
+                              src={logoAvatar}
+                              alt="Logo Avatar"
+                              style={{ width: "100%", height: "100%" }}
+                            />
+                          )}
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        style={{ fontFamily: "ui-sans-serif" }}
+                        primary={
+                          <span style={{ fontSize: "21px", fontFamily: "math" }}>{member.name}</span>
+                        }
+                        secondary={
+                          <>
+                            <span style={{ fontWeight: "bold", fontFamily: "math" }}>
+                              {member.rollNumber}
+                            </span>
+                            <br />
+                            <span style={{ fontStyle: "italic", fontFamily: "math" }}>
+                              {member.email}
+                            </span>
+                          </>
+                        }
+                      />
+
+                      {member.isLeader && (
+                        <StarBorderIcon
+                          style={{ marginRight: "40px" }}
+                          color="primary"
+                          sx={{ ml: "auto" }}
+                        />
+                      )}
+                    </ListItem>
+                  ))}
+                </List>
               </CardContent>
             </Card>
-          ))}
-        </List>
+          )}
+        </div>
       </div>
-      <div style={rightStyle}>
-        {selectedGroup && (
-          <Card
-            sx={{ width: "90%", height: "auto", padding: "10px", boxShadow: 3, margin: "auto" }}
-          >
-            <CardContent>
-              <Typography variant="h4" component="div" gutterBottom>
-                {selectedGroup.groupName}
-              </Typography>
-              <Typography
-                color="primary"
-                style={{ fontSize: "18px" }}
-                variant="h6"
-                gutterBottom
-                mb={2}
-              >
-                Dự án: {selectedGroup.projectName}
-              </Typography>
-
-              <List>
-                {selectedGroup.members.map((member, index) => (
-                  <ListItem
-                    key={index}
-                    style={{ padding: "6px", backgroundColor: "#00000008" }}
-                    sx={{ bgcolor: "white", my: 1, borderRadius: "10px", boxShadow: 1 }}
-                  >
-                    <ListItemAvatar style={{ padding: "10px" }}>
-                      <Avatar src={member.avatar}>
-                        {member.avatar ? null : (
-                          <img
-                            src={logoAvatar}
-                            alt="Logo Avatar"
-                            style={{ width: "100%", height: "100%" }}
-                          />
-                        )}
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      style={{ fontFamily: "ui-sans-serif" }}
-                      primary={
-                        <span style={{ fontSize: "21px", fontFamily: "math" }}>{member.name}</span>
-                      }
-                      secondary={
-                        <>
-                          <span style={{ fontWeight: "bold", fontFamily: "math" }}>
-                            {member.rollNumber}
-                          </span>
-                          <br />
-                          <span style={{ fontStyle: "italic", fontFamily: "math" }}>
-                            {member.email}
-                          </span>
-                        </>
-                      }
-                    />
-
-                    {member.isLeader && (
-                      <StarBorderIcon
-                        style={{ marginRight: "40px" }}
-                        color="primary"
-                        sx={{ ml: "auto" }}
-                      />
-                    )}
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </div>
+      {active_popup_schedule ? <Schedule id={matchedId} /> : ""}
+    </>
   );
 }
 

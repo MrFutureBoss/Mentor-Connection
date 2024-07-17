@@ -3,6 +3,7 @@ const initialValue = {
   active: 0,
   active_info: 1,
   active_popup: false,
+  ctive_popup_schedule: false,
   active_popup_add_class_list: false,
   active_create_class: true,
   active_create_group: false,
@@ -21,6 +22,9 @@ const storiesSlice = createSlice({
     },
     setActivePopup: (state, action) => {
       state.active_popup = action.payload;
+    },
+    setActivePopup_Schedule: (state, action) => {
+      state.active_popup_schedule = action.payload;
     },
     setActivePopupAddClassList: (state, action) => {
       state.active_popup_add_class_list = action.payload;
@@ -46,6 +50,7 @@ export const {
   setActiveInfo,
   setActiveCreateClass,
   setActivePopup,
+  setActivePopup_Schedule,
   setActivePopupAddClassList,
   setActivePopupCreateGroup,
   setActivePopupCreateGroupFromExcel,

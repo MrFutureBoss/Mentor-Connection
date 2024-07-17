@@ -80,13 +80,20 @@ const getGroupById = async (id) => {
           userCount: { $size: "$members" },
         },
       },
-      { $project: { matched: 0 } },
+      {
+        $project: {
+          projectId: 0,
+          // Bỏ dòng sau để giữ lại trường matched trong kết quả
+          // matched: 0
+        },
+      },
     ]);
     return group;
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 
 const getGroupMembers = async (groupId) => {
   try {

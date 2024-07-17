@@ -25,7 +25,12 @@ matchedRouter.patch(
   verifyAccessToken,
   matchedController.updateMatchedGroup
 );
-
+matchedRouter.post("/:id", matchedController.addTimeById);
+matchedRouter.delete("/:id/:eventId", matchedController.deleteTimeById);
+matchedRouter.get(
+  "/:id",
+  matchedController.getMatchedById
+);
 
 
 export default matchedRouter;
