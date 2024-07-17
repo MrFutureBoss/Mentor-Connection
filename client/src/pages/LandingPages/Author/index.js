@@ -47,17 +47,20 @@ function Author() {
       .catch((err) => checkError(err, navigate));
   }, [dispatch]);
   useEffect(() => {
-    axios
-      .get(BASE_URL + `/user/${userId}/profile`, config)
-      .then((res) => {
-        dispatch(setUserProfile(res.data));
-        return axios.get(BASE_URL + `/mentor_category/${userId}`, config);
-      })
-      .then((res) => {
-        dispatch(setMentorCategories(res.data));
-      })
-      .catch((err) => checkError(err, navigate));
+    if (userId) {
+      axios
+        .get(BASE_URL + `/user/${userId}/profile`, config)
+        .then((res) => {
+          dispatch(setUserProfile(res.data));
+          return axios.get(BASE_URL + `/mentor_category/${userId}`, config);
+        })
+        .then((res) => {
+          dispatch(setMentorCategories(res.data));
+        })
+        .catch((err) => checkError(err, navigate));
+    }
   }, [dispatch, userId, navigate, userProfile]);
+
   useEffect(() => {
     axios
       .get(BASE_URL + "/category")

@@ -89,7 +89,7 @@ export default function data() {
         ),
         status: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
-            {user.status}
+            {user.status == "Active" ? "Đang hoạt động" : ""}
           </MKTypography>
         ),
         rollNumber: (

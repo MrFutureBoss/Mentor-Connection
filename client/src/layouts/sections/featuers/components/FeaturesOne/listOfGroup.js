@@ -1,50 +1,25 @@
 import { Typography, Box, Avatar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MKBox from "components/MKBox";
 import PropTypes from "prop-types";
 import { setActivePopup } from "app/slices/activeSlice";
 import { setGroup } from "app/slices/groupSlice";
 import "./studentList.css";
-import { BASE_URL } from "utilities/initialValue";
-import axios from "axios";
-import MKButton from "components/MKButton";
-import { checkError } from "utilities/auth";
-import { setGroups } from "app/slices/groupSlice";
-import getParams from "utilities/getParams";
 import MKTypography from "components/MKTypography";
 
 const ListOfGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = useLocation();
-  const params = getParams(3, url.pathname);
   const { groups } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
-  const jwt = localStorage.getItem("jwt");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-    },
-  };
+
   const handleGroupDetailClick = (groupId) => {
     navigate(`/group/${groupId}/members`);
   };
 
-  const handleSaveMatched = (gid, uid) => {
-    axios
-      .post(`${BASE_URL}/matched`, { groupId: gid, mentorId: uid }, config)
-      .then(() => getAllGroups())
-      .catch((err) => checkError(err, navigate));
-  };
-  const getAllGroups = () =>
-    axios
-      .get(`${BASE_URL}/group/${params}/groups`, config)
-      .then((res) => dispatch(setGroups(res.data)))
-      .catch((err) => console.log(err));
   const Mentor = ({ image, username, email, mentorcategories, label }) => {
     return (
       <Box
@@ -176,13 +151,6 @@ const ListOfGroups = () => {
                   <i>({group.class?.className})</i>
                 </MKTypography>
               </Typography>
-              <MKButton
-                disabled={group.matched?.length > 0 || group.matching?.length === 0}
-                onClick={() => handleSaveMatched(group?._id, group.matching?.[0]?._id)}
-                sx={{ minHeight: "0", padding: "0" }}
-              >
-                Lưu
-              </MKButton>
             </MKBox>
             {group?.project?.length > 0 && (
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>

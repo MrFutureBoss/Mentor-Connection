@@ -184,6 +184,14 @@ const updateProjectStatusChanging = async (projectId, newStatus) => {
     throw new Error("Error updating project status");
   }
 };
+const updateProjectDeclineMessage = async (projectId, declineMessage) => {
+  return Project.findByIdAndUpdate(
+    projectId,
+    { declineMessage },
+    { new: true }
+  );
+};
+
 export default {
   createProject,
   getProjectById,
@@ -192,4 +200,5 @@ export default {
   updateProjectStatusPlanning,
   getChangingProjectsForTeacher,
   updateProjectStatusChanging,
+  updateProjectDeclineMessage,
 };

@@ -58,8 +58,7 @@ const UpdateProject = () => {
             .get(`${BASE_URL}/group/${userLogin?.groupId?.[0]?._id}`, config)
             .then((res) => dispatch(setGroup(res.data[0])))
             .catch((err) => console.log(err))
-        )
-        .catch((err) => console.log(err.message));
+        );
     isActivePopup();
   };
 

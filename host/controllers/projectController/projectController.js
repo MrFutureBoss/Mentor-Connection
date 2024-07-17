@@ -7,7 +7,7 @@ const updateProject = async (req, res) => {
     const project = await projectDAO.updateProject(id, {
       name,
       description,
-      status
+      status,
     });
     res.status(200).json(project);
   } catch (error) {
@@ -22,7 +22,7 @@ const reviseProject = async (req, res) => {
     const project = await projectDAO.updateProject(id, {
       name,
       description,
-      status
+      status,
     });
     res.status(200).json(project);
   } catch (error) {
@@ -80,17 +80,25 @@ const approveProjectPlanning = async (req, res) => {
 
 const declineProjectPlanning = async (req, res) => {
   const { projectId } = req.params;
+  const { declineMessage } = req.body; // Get decline message from request body
   try {
-    const updatedProject = await projectDAO.updateProjectStatusPlanning(
+    // Update project status
+    const updatedProjectStatus = await projectDAO.updateProjectStatusPlanning(
       projectId,
       "Decline"
     );
-    if (!updatedProject) {
+    if (!updatedProjectStatus) {
       return res.status(404).json({
         error: "Không tìm thấy dự án có trạng thái Planning",
       });
     }
-    res.json(updatedProject);
+    // Update decline message
+    const updatedProjectMessage = await projectDAO.updateProjectDeclineMessage(
+      projectId,
+      declineMessage
+    );
+
+    res.json(updatedProjectMessage);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -117,17 +125,25 @@ const approveProjectChanging = async (req, res) => {
 
 const declineProjectChanging = async (req, res) => {
   const { projectId } = req.params;
+  const { declineMessage } = req.body; // Get decline message from request body
   try {
-    const updatedProject = await projectDAO.updateProjectStatusChanging(
+    // Update project status
+    const updatedProjectStatus = await projectDAO.updateProjectStatusChanging(
       projectId,
       "Decline"
     );
-    if (!updatedProject) {
+    if (!updatedProjectStatus) {
       return res.status(404).json({
-        error: "Không tìm thấy dự án có trạng thái Planning",
+        error: "Không tìm thấy dự án có trạng thái Changing",
       });
     }
-    res.json(updatedProject);
+    // Update decline message
+    const updatedProjectMessage = await projectDAO.updateProjectDeclineMessage(
+      projectId,
+      declineMessage
+    );
+
+    res.json(updatedProjectMessage);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -143,4 +159,3 @@ export default {
   declineProjectChanging,
   reviseProject,
 };
-

@@ -3,7 +3,7 @@ const initialValue = {
   project: {},
   projectCategories: [],
   loading: false,
-  projectRequest: [],
+  projectRequest: {},
 };
 const projectSlice = createSlice({
   name: "project",
@@ -18,29 +18,9 @@ const projectSlice = createSlice({
     setProjectRequest: (state, action) => {
       state.projectRequest = action.payload;
     },
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
-
-    approveProject(state, action) {
-      const projectId = action.payload;
-      const projectIndex = state.projectsapproveProject.findIndex(
-        (project) => project._id === projectId
-      );
-      if (projectIndex !== -1) {
-        state.projectsapproveProject[projectIndex].approved = true; // Assuming there's an 'approved' field
-      }
-    },
   },
 });
 
 const { reducer, actions } = projectSlice;
-export const {
-  setProject,
-  setProjectCategories,
-  setProjectRequest,
-  setLoading,
-  setError,
-  approveProject,
-} = actions;
+export const { setProject, setProjectCategories, setProjectRequest } = actions;
 export default reducer;
