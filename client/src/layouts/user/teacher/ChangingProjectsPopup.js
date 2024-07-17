@@ -3,18 +3,22 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Button,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 import { checkError } from "utilities/auth";
 import { BASE_URL } from "utilities/initialValue";
-import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import PropTypes from "prop-types";
-
-// Thêm CSS trực tiếp vào JS để ghi đè z-index của SweetAlert
-const swalStyles = `
-  .swal2-container {
-    z-index: 2000 !important;
-  }
-`;
 
 const ChangingProjectsPopup = ({ open, handleClose }) => {
   const navigate = useNavigate();
@@ -22,14 +26,12 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
   const { userLogin } = useSelector((state) => state.user);
 
   const [changingProjects, setChangingProjects] = useState([]);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [confirmActionType, setConfirmActionType] = useState("");
   const [declineMessage, setDeclineMessage] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(open);
-
-  useEffect(() => {
-    setIsDialogOpen(open);
-  }, [open]);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
 
   useEffect(() => {
     fetchChangingProjects();
@@ -88,76 +90,60 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
       );
       setChangingProjects(updatedProjects);
 
-      Swal.fire({
-        title: successMessage,
-        icon: "success",
-      });
+      if (confirmActionType === "approve") {
+        handleToast(successMessage, "success");
+      } else if (confirmActionType === "decline") {
+        handleToast(successMessage, "error");
+      }
 
+      handleCloseDialog();
       fetchChangingProjects();
     } catch (error) {
       checkError(error, navigate);
-      Swal.fire({
-        title: errorMessage,
-        icon: "error",
-      });
+      handleToast(errorMessage, "error");
+      handleCloseDialog();
     }
+  };
+
+  const handleToast = (message, type) => {
+    setToastMessage(message);
+    setToastType(type);
   };
 
   const confirmAction = (actionType, projectId) => {
     setSelectedProjectId(projectId);
     setConfirmActionType(actionType);
     if (actionType === "decline") {
-      setIsDialogOpen(false);
-      Swal.fire({
-        title: "Bạn có chắc chắn muốn từ chối dự án này?",
-        icon: "warning",
-        input: "textarea",
-        inputLabel: "Lý do từ chối",
-        inputPlaceholder: "Nhập lý do từ chối...",
-        inputAttributes: {
-          "aria-label": "Nhập lý do từ chối",
-        },
-        showCancelButton: true,
-        confirmButtonText: "Đồng ý",
-        cancelButtonText: "Hủy",
-        inputValidator: (value) => {
-          if (!value) {
-            return "Bạn cần nhập lý do từ chối!";
-          }
-        },
-        preConfirm: (value) => {
-          return new Promise((resolve) => {
-            setDeclineMessage(value);
-            resolve();
-          });
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          handleAction();
-        } else {
-          setIsDialogOpen(true);
-        }
-      });
+      setConfirmDialogOpen(true);
     } else {
-      Swal.fire({
-        title: "Bạn có chắc chắn muốn duyệt dự án này?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Đồng ý",
-        cancelButtonText: "Hủy",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          handleAction();
-        }
-      });
+      setDeclineMessage("");
+      setConfirmDialogOpen(true);
     }
   };
 
+  const handleCloseDialog = () => {
+    setSelectedProjectId(null);
+    setConfirmActionType("");
+    setDeclineMessage("");
+    setConfirmDialogOpen(false);
+  };
+
+  const handleCloseToast = () => {
+    setToastMessage("");
+    toast.dismiss();
+  };
+
   const handlePopupClose = () => {
-    setIsDialogOpen(false);
+    handleCloseToast();
     handleClose();
+  };
+
+  const handleDeclineConfirm = () => {
+    if (!declineMessage) {
+      handleToast("Bạn cần nhập lý do từ chối!", "error");
+      return;
+    }
+    handleAction();
   };
 
   const columns = [
@@ -217,8 +203,7 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
 
   return (
     <>
-      <style>{swalStyles}</style>
-      <Dialog open={isDialogOpen} onClose={handlePopupClose} fullWidth maxWidth="xl">
+      <Dialog open={open} onClose={handlePopupClose} fullWidth maxWidth="xl">
         <DialogTitle>Danh sách các nhóm cần cập nhật lại dự án</DialogTitle>
         <DialogContent>
           <Box sx={{ height: 600, width: "100%" }}>
@@ -248,11 +233,69 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handlePopupClose} color="secondary">
+          <Button onClick={handleClose} color="secondary">
             Đóng
           </Button>
         </DialogActions>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          progress={undefined}
+          newestOnTop={false}
+          rtl={false}
+          pauseOnFocusLoss
+          limit={1}
+          style={{ zIndex: 9999 }}
+        />
       </Dialog>
+
+      <Dialog open={confirmDialogOpen} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+        <DialogTitle>Xác nhận từ chối dự án</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="decline-reason"
+            label="Lý do từ chối"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={declineMessage}
+            onChange={(e) => setDeclineMessage(e.target.value)}
+            error={!!declineMessage && declineMessage.trim() === ""}
+            helperText={
+              !!declineMessage && declineMessage.trim() === "" ? "Bạn cần nhập lý do từ chối" : ""
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeclineConfirm} color="primary">
+            Đồng ý
+          </Button>
+          <Button onClick={handleCloseDialog} color="secondary">
+            Hủy
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Toast */}
+      {toastMessage &&
+        toast(toastMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          icon: toastType === "success" ? <CheckCircleIcon /> : <CancelIcon />,
+          onClose: handleCloseToast, // Xử lý khi đóng toast
+        })}
     </>
   );
 };

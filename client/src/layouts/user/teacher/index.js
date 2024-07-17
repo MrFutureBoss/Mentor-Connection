@@ -35,7 +35,7 @@ const TeacherAccep = () => {
         })
         .catch((err) => checkError(err, navigate));
     }
-  }, []);
+  }, [userLogin]);
 
   const handleOpenDialog = () => {
     setOpenDialog(true);

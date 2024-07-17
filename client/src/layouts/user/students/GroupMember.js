@@ -12,11 +12,12 @@ import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
 import getParams from "utilities/getParams";
 import { setActivePopup } from "app/slices/activeSlice";
-import { format } from 'date-fns';
-import { vi } from 'date-fns/locale'; // Import locale data for Vietnamese
-import PushPinIcon from '@mui/icons-material/PushPin';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import { format } from "date-fns";
+import { vi } from "date-fns/locale"; // Import locale data for Vietnamese
+import PushPinIcon from "@mui/icons-material/PushPin";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import { updateGroupLeader } from "app/slices/groupSlice";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
@@ -71,7 +72,7 @@ const GroupMembers = () => {
   };
 
   const openMeet = (email) => {
-    window.open(`https://meet.google.com/new?email=${encodeURIComponent(email)}`, '_blank'); // Mở liên kết Meet trong tab mới
+    window.open(`https://meet.google.com/new?email=${encodeURIComponent(email)}`, "_blank"); // Mở liên kết Meet trong tab mới
   };
   const handleUpdateProject = () => {
     dispatch(setActivePopup(true));
@@ -81,7 +82,7 @@ const GroupMembers = () => {
       showDeclineMessage();
     }
   }, [groupDetails]);
-  
+
   const showDeclineMessage = () => {
     if (userLogin?.role === 4 && groupDetails?.members?.some((member) => member.isLeader)) {
       Swal.fire({
@@ -397,10 +398,17 @@ const GroupMembers = () => {
             }}
           >
             <MKTypography variant="h5" sx={{ fontFamily: "inherit", fontWeight: "bold" }}>
-              Lịch Họp -             <button
+              Lịch Họp -{" "}
+              <button
                 style={{
-                  color: "#FFF", fontSize: "15px", fontWeight: "bold", padding: "5px 10px", backgroundColor: "orange",
-                  border: "1px solid orange", borderRadius: "5px", cursor: "pointer"
+                  color: "#FFF",
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                  padding: "5px 10px",
+                  backgroundColor: "orange",
+                  border: "1px solid orange",
+                  borderRadius: "5px",
+                  cursor: "pointer",
                 }}
                 onClick={() => openMeet(groupDetails?.mentor?.[0].email)}
               >
@@ -412,15 +420,35 @@ const GroupMembers = () => {
                 <MKTypography
                   key={meet._id}
                   variant="body2"
-                  sx={{ color: "text.secondary", margin: "10px auto", backgroundColor: "#f9f5d2", padding:'10px', borderRadius: "5px" }}
+                  sx={{
+                    color: "text.secondary",
+                    margin: "10px auto",
+                    backgroundColor: "#f9f5d2",
+                    padding: "10px",
+                    borderRadius: "5px",
+                  }}
                 >
                   <p>
-                    <strong><PushPinIcon style={{color: "red"}}/> Buổi {meetIndex + 1}: </strong>{format(new Date(meet.start), "EEEE, 'ngày' dd 'tháng' MM 'năm' yyyy", { locale: vi })}
+                    <strong>
+                      <PushPinIcon style={{ color: "red" }} /> Buổi {meetIndex + 1}:{" "}
+                    </strong>
+                    {format(new Date(meet.start), "EEEE, 'ngày' dd 'tháng' MM 'năm' yyyy", {
+                      locale: vi,
+                    })}
                   </p>
                   <p>
-                    <strong><AccessTimeIcon /> Bắt đầu từ </strong>{format(new Date(meet.start), "HH:mm", { locale: vi })} giờ <strong>đến</strong> {format(new Date(meet.end), "HH:mm", { locale: vi })} giờ
+                    <strong>
+                      <AccessTimeIcon /> Bắt đầu từ{" "}
+                    </strong>
+                    {format(new Date(meet.start), "HH:mm", { locale: vi })} giờ <strong>đến</strong>{" "}
+                    {format(new Date(meet.end), "HH:mm", { locale: vi })} giờ
                   </p>
-                  <p><strong><EditNoteIcon style={{ color: "#00BFFF"}}/> Nội dung cuộc họp:</strong> {meet.title}</p>
+                  <p>
+                    <strong>
+                      <EditNoteIcon style={{ color: "#00BFFF" }} /> Nội dung cuộc họp:
+                    </strong>{" "}
+                    {meet.title}
+                  </p>
                 </MKTypography>
               ))
             )}
