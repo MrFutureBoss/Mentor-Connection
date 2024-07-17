@@ -18,6 +18,7 @@ import { vi } from 'date-fns/locale'; // Import locale data for Vietnamese
 import PushPinIcon from '@mui/icons-material/PushPin';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { updateGroupLeader } from "app/slices/groupSlice";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
