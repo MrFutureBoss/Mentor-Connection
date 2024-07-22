@@ -105,7 +105,7 @@ const ListOfGroups = () => {
         gap: "1.5rem",
       }}
     >
-      {groups.map((group) => (
+      {groups?.map((group) => (
         <Box
           key={group._id}
           sx={{

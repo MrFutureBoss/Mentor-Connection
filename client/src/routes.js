@@ -2,8 +2,8 @@
 import Icon from "@mui/material/Icon";
 
 // Pages
-import AboutUs from "layouts/pages/landing-pages/about-us";
-import ContactUs from "layouts/pages/landing-pages/contact-us";
+// import AboutUs from "layouts/pages/landing-pages/about-us";
+// import ContactUs from "layouts/pages/landing-pages/contact-us";
 import Author from "layouts/pages/landing-pages/author";
 import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
@@ -83,16 +83,16 @@ function Routes() {
         {
           name: "Thông tin",
           collapse: [
-            {
-              name: "about us",
-              route: "/pages/landing-pages/about-us",
-              component: <AboutUs />,
-            },
-            {
-              name: "contact us",
-              route: "/pages/landing-pages/contact-us",
-              component: <ContactUs />,
-            },
+            // {
+            //   name: "about us",
+            //   route: "/pages/landing-pages/about-us",
+            //   component: <AboutUs />,
+            // },
+            // {
+            //   name: "contact us",
+            //   route: "/pages/landing-pages/contact-us",
+            //   component: <ContactUs />,
+            // },
             {
               name: "Tài khoản",
               route: "/pages/landing-pages/author",

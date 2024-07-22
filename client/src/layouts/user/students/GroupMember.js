@@ -82,7 +82,7 @@ const GroupMembers = () => {
       showDeclineMessage();
     }
   }, [groupDetails]);
-
+  console.log(groupDetails);
   const showDeclineMessage = () => {
     if (userLogin?.role === 4 && groupDetails?.members?.some((member) => member.isLeader)) {
       Swal.fire({
@@ -175,6 +175,8 @@ const GroupMembers = () => {
                           ? "#0066CC"
                           : groupDetails?.project?.status === "Planning"
                           ? "#009900"
+                          : groupDetails?.project?.status === "Not Updated Yet"
+                          ? "#FFA500"
                           : "",
                     }}
                   >
@@ -186,6 +188,8 @@ const GroupMembers = () => {
                       ? "Đang chờ duyệt"
                       : groupDetails?.project?.status === "InProgress"
                       ? "Đang hoạt động"
+                      : groupDetails?.project?.status === "Not Updated Yet"
+                      ? "Chưa cập nhật"
                       : ""}
                   </span>
                 </MKTypography>
@@ -416,7 +420,7 @@ const GroupMembers = () => {
               </button>
             </MKTypography>
             {groupDetails?.matched?.map((match) =>
-              match.time.map((meet, meetIndex) => (
+              match?.time?.map((meet, meetIndex) => (
                 <MKTypography
                   key={meet._id}
                   variant="body2"

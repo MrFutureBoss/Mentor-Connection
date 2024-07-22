@@ -116,8 +116,7 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
     if (actionType === "decline") {
       setConfirmDialogOpen(true);
     } else {
-      setDeclineMessage("");
-      setConfirmDialogOpen(true);
+      handleAction();
     }
   };
 
@@ -294,7 +293,7 @@ const ChangingProjectsPopup = ({ open, handleClose }) => {
           draggable: true,
           progress: undefined,
           icon: toastType === "success" ? <CheckCircleIcon /> : <CancelIcon />,
-          onClose: handleCloseToast, // Xử lý khi đóng toast
+          onClose: handleCloseToast,
         })}
     </>
   );

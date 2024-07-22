@@ -6,8 +6,14 @@ const projectSchema = new mongoose.Schema(
     description: { type: String, required: false },
     status: {
       type: String,
-      enum: ["Planning", "InProgress", "Decline", "Changing"],
-      default: "Planning",
+      enum: [
+        "Not Updated Yet",
+        "Planning",
+        "InProgress",
+        "Decline",
+        "Changing",
+      ],
+      default: "Not Updated Yet",
     },
     declineMessage: { type: String, default: "" },
   },

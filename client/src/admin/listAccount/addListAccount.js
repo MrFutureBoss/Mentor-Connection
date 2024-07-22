@@ -1,21 +1,17 @@
-// @mui material components
-import Card from "@mui/material/Card";
-
-// Material Kit 2 React components
-import MKBox from "components/MKBox";
-import MKTypography from "components/MKTypography";
 import * as XLSX from "xlsx/xlsx.mjs";
-
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { BASE_URL } from "utilities/initialValue";
-import axios from "axios";
 import { useState } from "react";
-import { Modal, Slide } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import MKButton from "components/MKButton";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
 import { setUsers } from "app/slices/userSlice";
 import { setActivePopup } from "app/slices/activeSlice";
+import { Modal, Slide } from "@mui/material";
+import Card from "@mui/material/Card";
+import MKBox from "components/MKBox";
+import MKTypography from "components/MKTypography";
+import MKButton from "components/MKButton";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
 import MKInput from "components/MKInput";
 
 function AddListAccount() {
@@ -38,9 +34,37 @@ function AddListAccount() {
     },
   };
   const limitUser = 10;
+
+  const transformData = (data) => {
+    return data.map((user) => ({
+      username: user.UserName,
+      email: user.Email,
+      password: "",
+      role:
+        user.Role === "hoc sinh"
+          ? 4
+          : user.Role === "giao vien"
+          ? 3
+          : user.Role === "mentor"
+          ? 2
+          : user.Role === "admin"
+          ? 1
+          : 0,
+      dob: new Date((user.DOB - (25567 + 2)) * 86400 * 1000),
+      gender: user.Gender.toLowerCase() === "nam",
+      phoneNumber: user.PhoneNumber,
+      degree: user.Dgree,
+      menteeCount: parseInt(user.MenteeCount, 10),
+      isLeader: false,
+      status: "InActive",
+      rollNumber: user.RollNumber,
+    }));
+  };
+
   const handleSubmit = () => {
+    const newData = transformData(fileName);
     axios
-      .post(`${BASE_URL}/admins/insert-list-users`, { file: fileName }, config)
+      .post(`${BASE_URL}/admins/insert-list-users`, { file: newData }, config)
       .then(() => {
         axios
           .get(
@@ -52,8 +76,9 @@ function AddListAccount() {
           .catch((err) => console.log(err));
         isActivePopup();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error.response.data));
   };
+
   return (
     <Modal
       open={active_popup}
@@ -74,7 +99,6 @@ function AddListAccount() {
             mb={1}
             textAlign="center"
           >
-            {/* <MKBox position="relative"> */}
             <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
               Tạo danh sách người dùng
             </MKTypography>
@@ -111,6 +135,7 @@ function AddListAccount() {
                             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
                             const excelData = XLSX.utils.sheet_to_json(worksheet);
                             setFileName(excelData);
+                            console.log(excelData);
                           };
                           reader.readAsArrayBuffer(new Blob([file]));
                         }}
