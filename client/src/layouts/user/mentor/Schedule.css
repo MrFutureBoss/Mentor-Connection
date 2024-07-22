@@ -83,11 +83,11 @@
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 .rbc-event {
-  background-color: #e153e1; /* Màu nền */
-  color: #fff;              /* Màu chữ */
+  background-color: #007bff; /* Màu nền */
+  color: #FFF;              /* Màu chữ */
   border: none;             /* Xóa bỏ viền nếu cần */
   border-radius: 4px;       /* Bo góc */
-  padding: 4px; 
+  padding: 0px 4px; 
   height: 100%;            /* Khoảng cách bên trong */
 }
 .rbc-header{
@@ -97,3 +97,8 @@
 .rbc-toolbar-label{
   font-size: 30px;
 }
+.rbc-date-cell{
+  padding: 0px 4px;
+  height: 25px;
+}
+

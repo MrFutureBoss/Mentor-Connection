@@ -31,6 +31,7 @@ matchedRouter.get(
   "/:id",
   matchedController.getMatchedById
 );
+matchedRouter.get("/mentor/:mentorId", matchedController.getAllTimeByMentorIdController)
 
 
 export default matchedRouter;

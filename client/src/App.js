@@ -11,6 +11,7 @@ import "./App.css";
 import GroupDetail from "layouts/user/students/index";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CssBaseline } from "@mui/material";
 import TeachersFunction from "layouts/sections/featuers";
 import SignInPage from "layouts/pages/authentication/sign-in";

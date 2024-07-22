@@ -106,6 +106,16 @@ const getMatchedById = async (req, res, next) => {
   }
 };
 
+const getAllTimeByMentorIdController = async (req, res, next) => {
+  try {
+    const mentorId = req.params.mentorId;
+    const result = await matched.getAllTimeByMentorId(mentorId);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export default {
   addMatched,
@@ -116,4 +126,5 @@ export default {
   addTimeById,
   deleteTimeById,
   getMatchedById,
+  getAllTimeByMentorIdController,
 };
