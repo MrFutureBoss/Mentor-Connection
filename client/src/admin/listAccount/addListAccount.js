@@ -41,12 +41,12 @@ function AddListAccount() {
       email: user.Email,
       password: "",
       role:
-        user.Role === "hoc sinh"
+        user.Role === "học sinh"
           ? 4
-          : user.Role === "giao vien"
-          ? 3
-          : user.Role === "mentor"
+          : user.Role === "giáo viên"
           ? 2
+          : user.Role === "mentor"
+          ? 3
           : user.Role === "admin"
           ? 1
           : 0,
@@ -76,7 +76,9 @@ function AddListAccount() {
           .catch((err) => console.log(err));
         isActivePopup();
       })
-      .catch((error) => console.log(error.response.data));
+      .catch((error) =>
+        console.error("Error:", error.response ? error.response.data : error.message)
+      );
   };
 
   return (
