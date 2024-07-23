@@ -178,6 +178,14 @@ const getMatchedById = async (id) => {
   }
 };
 
+const getAllTimeByMentorId = async (mentorId) => {
+  try {
+    const result = await Matched.find({ mentorId: mentorId }).select('time').exec();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 
 export default {
@@ -189,4 +197,5 @@ export default {
   addTimeById,
   deleteTimeById,
   getMatchedById,
+  getAllTimeByMentorId,
 };
