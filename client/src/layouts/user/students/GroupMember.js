@@ -13,12 +13,12 @@ import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
 import getParams from "utilities/getParams";
 import { setActivePopup } from "app/slices/activeSlice";
-import { format } from 'date-fns';
-import { vi } from 'date-fns/locale'; // Import locale data for Vietnamese
-import PushPinIcon from '@mui/icons-material/PushPin';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import EditNoteIcon from '@mui/icons-material/EditNote';
 import { updateGroupLeader } from "app/slices/groupSlice";
+import { format } from "date-fns";
+import { vi } from "date-fns/locale"; // Import locale data for Vietnamese
+import PushPinIcon from "@mui/icons-material/PushPin";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
@@ -71,7 +71,6 @@ const GroupMembers = () => {
   const handleUserDetailClick = (userId) => {
     navigate(`/user/${userId}/profile`);
   };
-
   const openMeet = (email) => {
     window.open(`https://meet.google.com/new?email=${encodeURIComponent(email)}`, "_blank"); // Mở liên kết Meet trong tab mới
   };
@@ -83,7 +82,7 @@ const GroupMembers = () => {
       showDeclineMessage();
     }
   }, [groupDetails]);
-  console.log(groupDetails);
+
   const showDeclineMessage = () => {
     if (userLogin?.role === 4 && groupDetails?.members?.some((member) => member.isLeader)) {
       Swal.fire({
@@ -226,7 +225,9 @@ const GroupMembers = () => {
               )}
             {userLogin?.isLeader &&
               userLogin?.groupId[0]?._id === groupId &&
-              ["Planning", "InProgress", "Changing"].includes(groupDetails?.project?.status) && (
+              ["Planning", "InProgress", "Decline", "Changing"].includes(
+                groupDetails?.project?.status
+              ) && (
                 <MKButton
                   onClick={() => dispatch(setActivePopup(true))}
                   sx={{
@@ -458,7 +459,7 @@ const GroupMembers = () => {
               ))
             )}
           </Box>
-        )}
+        )}{" "}
       </Box>
     </Box>
   );
