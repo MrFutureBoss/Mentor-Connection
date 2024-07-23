@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
 import MKBox from "components/MKBox";
-// import MKButton from "components/MKButton";
+import MKButton from "components/MKButton";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import Tables from "layouts/tables/user-list-table";
 import { useEffect } from "react";
@@ -14,8 +14,8 @@ import { Autocomplete } from "@mui/material";
 import MKInput from "components/MKInput";
 import { setActivePopup } from "app/slices/activeSlice";
 import { setLimit } from "app/slices/utilitiesSlice";
-// import ExcelJS from "exceljs";
-// import saveAs from "file-saver";
+import ExcelJS from "exceljs";
+import saveAs from "file-saver";
 
 function ListAccount() {
   const dispatch = useDispatch();
@@ -56,34 +56,34 @@ function ListAccount() {
     { name: "Giáo viên", role: 2 },
     { name: "Quản trị viên", role: 1 },
   ];
-  // const handleExportExcel = () => {
-  //   console.log("ss");
-  //   const workbook = new ExcelJS.Workbook();
-  //   const worksheet = workbook.addWorksheet("mau_thong_tin_nguoi_dung");
-  //   const columnNames = [
-  //     "UserName",
-  //     "Email",
-  //     "MemberCode",
-  //     "RollNumber",
-  //     "DOB",
-  //     "Gender",
-  //     "PhoneNumber",
-  //     "MenteeCount",
-  //     "Dgree",
-  //   ];
-  //   worksheet.addRow(columnNames);
-  //   columnNames.forEach((header, index) => {
-  //     const column = worksheet.getColumn(index + 1);
-  //     column.eachCell((cell) => {
-  //       const length = String(cell.value).length;
-  //       column.width = Math.max(column.width || 0, length + 2);
-  //     });
-  //   });
-  //   const fileName = "mau_thong_tin_nguoi_dung.xlsx";
-  //   workbook.xlsx.writeBuffer().then(function (buffer) {
-  //     saveAs(new Blob([buffer], { type: "application/octet-stream" }), fileName);
-  //   });
-  // };
+  const handleExportExcel = () => {
+    console.log("ss");
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("mau_thong_tin_nguoi_dung");
+    const columnNames = [
+      "UserName",
+      "Email",
+      "MemberCode",
+      "RollNumber",
+      "DOB",
+      "Gender",
+      "PhoneNumber",
+      "MenteeCount",
+      "Dgree",
+    ];
+    worksheet.addRow(columnNames);
+    columnNames.forEach((header, index) => {
+      const column = worksheet.getColumn(index + 1);
+      column.eachCell((cell) => {
+        const length = String(cell.value).length;
+        column.width = Math.max(column.width || 0, length + 2);
+      });
+    });
+    const fileName = "mau_thong_tin_nguoi_dung.xlsx";
+    workbook.xlsx.writeBuffer().then(function (buffer) {
+      saveAs(new Blob([buffer], { type: "application/octet-stream" }), fileName);
+    });
+  };
   const onSearchChange = (value) => {
     dispatch(setSearchValue(value));
   };
@@ -122,7 +122,7 @@ function ListAccount() {
                       p={3}
                       sx={{ gap: "0.5rem" }}
                     >
-                      {/* <MKBox>
+                      <MKBox>
                         <MKButton onClick={handleExportExcel} sx={{ textTransform: "none" }}>
                           Tải file
                         </MKButton>
@@ -134,7 +134,7 @@ function ListAccount() {
                         >
                           Tạo người dùng
                         </MKButton>
-                      </MKBox> */}
+                      </MKBox>
                       <MKBox display="flex" alignItems="center">
                         <Autocomplete
                           disableClearable
