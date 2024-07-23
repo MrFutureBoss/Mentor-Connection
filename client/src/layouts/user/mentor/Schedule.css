@@ -82,70 +82,25 @@
   border-color: #007bff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
-.App {
-  text-align: center;
-}
 
-.input-container {
-  width: 80%;
-  margin: auto;
-  margin-bottom: 20px;
+.rbc-event {
+  background-color: #007bff; /* Màu nền */
+  color: #FFF;              /* Màu chữ */
+  border: none;             /* Xóa bỏ viền nếu cần */
+  border-radius: 4px;       /* Bo góc */
+  padding: 0px 4px; 
+  height: 100%;            /* Khoảng cách bên trong */
 }
-
-.input-field {
-  width: 20%;
-  margin-right: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  display: inline-block;
-  vertical-align: middle;
+.rbc-header{
+  background-color: #296aae;
+  color : #fff
 }
-
-.input-field.react-datepicker-ignore-onclickoutside {
-  position: relative;
-  z-index: 1000;
+.rbc-toolbar-label{
+  font-size: 30px;
 }
-
-.add-button {
-  margin-top: 10px;
-  padding: 5px 10px;
-  border: none;
-  background-color: #4caf50;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.add-button:hover {
-  background-color: #45a049;
-}
-
-.react-datepicker-wrapper,
-.react-datepicker__input-container,
-.react-datepicker__input-container input {
-  width: auto;
-}
-.rbc-event-content {
-  height: 100%;
-}
-.event-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.event-info {
-  flex-grow: 1; /* Ensures the event title takes up remaining space */
-}
-
-.delete-button {
-  padding: 5px 10px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  cursor: pointer;
+.rbc-date-cell{
+  padding: 0px 4px;
+  height: 25px;
 }
 
 .delete-button:hover {

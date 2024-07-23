@@ -163,7 +163,7 @@ function MentorGroups() {
 
                     <button
                       style={{
-                        display: group.status === "Pending" ? "none" : "flex",
+                        display: group.status === "Pending" || group.status === null ? "none" : "flex",
                         backgroundColor: "#2596be",
                         color: "white",
                         borderRadius: "5px",
