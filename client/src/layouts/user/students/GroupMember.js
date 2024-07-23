@@ -13,11 +13,11 @@ import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
 import getParams from "utilities/getParams";
 import { setActivePopup } from "app/slices/activeSlice";
-import { format } from 'date-fns';
-import { vi } from 'date-fns/locale'; // Import locale data for Vietnamese
-import PushPinIcon from '@mui/icons-material/PushPin';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import { format } from "date-fns";
+import { vi } from "date-fns/locale"; // Import locale data for Vietnamese
+import PushPinIcon from "@mui/icons-material/PushPin";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import { updateGroupLeader } from "app/slices/groupSlice";
 
 const GroupMembers = () => {
